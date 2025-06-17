@@ -1,12 +1,12 @@
 import React from 'react'
 import Header from '../components/Header'
-import Property from '../components/Property'
+import Category from '../components/Category'
 
 const Home = () => {
   return (
     <>
       <Header/>
-      <Property/>
+      <Category/>
     </>
   )
 }
