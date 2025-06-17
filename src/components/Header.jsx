@@ -5,8 +5,8 @@ import Searchbar from "./Searchbar";
 const Header = () => {
   return (
     <>
-      <div className="border-bottom">
-        <div className="navbar navbar-expand-lg py-2 bg-semilight">
+      <div className="border-bottom bg-header">
+        <div className="navbar navbar-expand-lg py-2">
           <div className="container-fluid">
             <div className="d-flex justify-content-between w-100 align-items-center">
               <a className="navbar-brand logo" href="#">
