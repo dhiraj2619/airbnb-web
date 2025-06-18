@@ -47,10 +47,18 @@ body {
   background-color: #fafafa;
 }
 .spacebtn {
-  border: 1px solid #c9c6c6;
+  background-color:#e3e0e0;
+  padding: 12px;
 }
 .spacebtn:hover {
-  box-shadow: 4px 4px 8px #cecdcd;
+  background-color: #dcdcdc;
+}
+.spacebtn:focus {
+  outline: none;
+
+}
+.nav-link,.dropdown-item{
+  font-size: 15.5px;
 }
 
 .dropdown-menu.submenu {

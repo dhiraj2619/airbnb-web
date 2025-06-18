@@ -1,6 +1,7 @@
 import React from "react";
 import Usericon from "../assets/img/usericon.svg";
 import Searchbar from "./Searchbar";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -41,30 +42,26 @@ const Header = () => {
                   </li>
                 </ul>
 
+
+                <Link className="nav-link fw-semibold me-3">Become a host</Link>
                 <div className="dropdown">
                   <button
-                    className="btn rounded-5 d-flex align-items-center gap-2 w-auto justify-content-center px-3 py-2 spacebtn"
+                    className="btn rounded-5 d-flex align-items-center gap-2 w-auto justify-content-center spacebtn"
                     type="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <i className="bi bi-list fs-6"></i>
-                    <img
-                      src={Usericon}
-                      className="img-fluid"
-                      width={30}
-                      alt=""
-                    />
+                   <svg fill="#000000" width="15px" height="15px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M27 193.6c-8.2-8.2-12.2-18.6-12.2-31.2s4-23 12.2-31.2S45.6 119 58.2 119h912.4c12.6 0 23 4 31.2 12.2s12.2 18.6 12.2 31.2-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2zm974.8 285.2c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 522.6 14.8 510s4-23 12.2-31.2 18.6-12.2 31.2-12.2h912.4c12.6 0 23 4 31.2 12.2zm0 347.4c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 870 14.8 857.4s4-23 12.2-31.2S45.6 814 58.2 814h912.4c12.6 0 23 4.2 31.2 12.2z"/></svg>
                   </button>
-                  <ul class="dropdown-menu submenu">
+                  <ul className="dropdown-menu submenu">
                     <li className="py-1">
                       <a className="dropdown-item" href="#">
-                        Login
+                       <i class="bi bi-question-circle me-1"></i> Help Center
                       </a>
                     </li>
                     <li className="py-1">
                       <a className="dropdown-item" href="#">
-                        Signup
+                        Login or Signup
                       </a>
                     </li>
                   </ul>
@@ -78,7 +75,7 @@ const Header = () => {
           <div className="container-fluid">
             <div className="row d-flex justify-content-center">
               <div className="col-7">
-                 <Searchbar/>
+                <Searchbar />
               </div>
             </div>
           </div>

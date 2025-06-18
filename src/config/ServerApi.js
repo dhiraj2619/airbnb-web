@@ -1,0 +1,1 @@
+export const ServerApi = "https://airbnb-server-m98l.onrender.com/api/v1";
