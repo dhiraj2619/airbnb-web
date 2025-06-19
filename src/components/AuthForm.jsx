@@ -1,4 +1,5 @@
 import React from "react";
+import "./css/input.css";
 
 const AuthForm = () => {
   return (
@@ -6,15 +7,18 @@ const AuthForm = () => {
       <h4>Welcome to Airbnb</h4>
 
       <div className="mt-3">
-        <div class="form-floating mb-3">
-          <input
-            type="number"
-            className="form-control"
-            id="floatingInput"
-            placeholder="Enter Phone"
-          />
-          <label for="floatingInput">Phone Number</label>
-        </div>
+        <form action="">
+          <div class="form-floating mb-3">
+            <input
+              type="tel"
+              className="form-control authInput"
+              id="floatingInput"
+              placeholder="Enter Phone"
+            />
+            <label for="floatingInput">Phone Number</label>
+          </div>
+          <button className="btn submitbtn w-100">Continue</button>
+        </form>
       </div>
     </div>
   );

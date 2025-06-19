@@ -1,0 +1,23 @@
+input:focus{
+    box-shadow: none !important;
+}
+input[type="text"],
+input[type="email"], 
+input[type="password"],
+input[type="tel"]{
+    border: 1px solid #4e4d4d;
+    transition: all 0.3s;
+}
+
+.btn.submitbtn{
+   background: linear-gradient(to right,#E61E4D 0%,#E31C5F 50%,#D70466 100%);;
+   color: #fff;
+   font-size: 16px;
+   font-weight: 600;
+   padding: 10px 13px;
+}
+
+.authInput:focus{
+    position: relative;
+    border: 1.5px solid #2b2a2a !important;
+}
