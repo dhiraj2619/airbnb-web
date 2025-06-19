@@ -4,6 +4,7 @@ import { CategoryReducer } from './reducers/CategoryReducer';
 import { persistReducer, persistStore } from 'redux-persist';
 import { thunk } from 'redux-thunk';
 import { composeWithDevTools } from '@redux-devtools/extension';
+import { propertyReducer } from './reducers/PropertyReducer';
 
 
 const persistConfig ={
@@ -13,7 +14,8 @@ const persistConfig ={
 
 
 const rootReducer = combineReducers({
-   categories : CategoryReducer
+   categories : CategoryReducer,
+   properties : propertyReducer
 });
 
 

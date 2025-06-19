@@ -226,6 +226,29 @@ button:disabled {
 .property-icon img {
   width: 45px;
 }
+button:disabled{
+  cursor: not-allowed !important;
+}
+.nexttbtn:disabled{
+  opacity: 0.4;
+}
+.border-tight{
+  border: 2px solid var(--color-dark);
+}
+.fade-down .modal-dialog {
+  animation: fadeDown 0.4s ease-out;
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 @keyframes zoomIn {
   0% {

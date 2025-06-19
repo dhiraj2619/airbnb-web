@@ -2,9 +2,12 @@ import React from 'react'
 
 const HostProperty = () => {
   return (
-    <div className="container">
-
-    </div>
+     <>
+        <div className="modal fade" id="">
+             
+        </div>
+       
+     </>
   )
 }
 
