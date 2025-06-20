@@ -16,8 +16,33 @@ input[type="tel"]{
    font-weight: 600;
    padding: 10px 13px;
 }
+.btn.submitbtn:focus{
+      color: #fff !important;
+}
 
 .authInput:focus{
     position: relative;
     border: 1.5px solid #2b2a2a !important;
+  
+}
+.googleauthbtn {
+  position: relative;
+  height: 45px;
+  margin: 20px 0;
+  font-size: 15px;
+  font-weight: 550;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 0.2px;
+  text-align: center;
+}
+
+.googleauthbtn svg {
+  position: absolute;
+  left: 15px;
+}
+.googleauthbtn:hover{
+    background-color: #eff5f4 !important;
+    color: #000;
 }

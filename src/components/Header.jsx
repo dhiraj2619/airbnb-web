@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Searchbar from "./Searchbar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import LoginUserModal from "./LoginUserModal";
 
 const Header = () => {
   const PropertyType = [
@@ -14,6 +15,7 @@ const Header = () => {
   ];
   const [selectedTypeId, setSelectedTypeId] = useState(null);
   const [showHostModal, setShowHostModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -38,8 +40,15 @@ const Header = () => {
     setSelectedTypeId(null);
   }
 
+  const CloseLoginModal=()=>{
+    setShowLoginModal(false);
+  }
+
   const Backdrop = showHostModal ? (
     <div className="modal-backdrop fade show" onClick={()=>setShowHostModal(false)}></div> ): null
+
+  const BackdropLogin = showLoginModal ? (
+    <div className="modal-backdrop fade show" onClick={()=>setShowLoginModal(false)}></div> ): null
   
   return (
     <>
@@ -118,9 +127,9 @@ const Header = () => {
                       </a>
                     </li>
                     <li className="py-1">
-                      <a className="dropdown-item" href="#">
+                      <button className="dropdown-item" href="#" onClick={()=> location.pathname === '/become-host' ? setShowLoginModal(false) : setShowLoginModal(true)}>
                         Login or Signup
-                      </a>
+                      </button>
                     </li>
                   </ul>
                 </div>
@@ -204,6 +213,8 @@ const Header = () => {
 
 
       {Backdrop}
+
+      {showLoginModal && <LoginUserModal onModalClose={CloseLoginModal} BackdropLogin={BackdropLogin}/>}
     </>
   );
 };
