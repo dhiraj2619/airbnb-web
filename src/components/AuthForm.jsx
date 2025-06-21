@@ -23,35 +23,75 @@ const AuthForm = () => {
     if (userExists === true) {
       setStage("login");
     } else if (userExists === false) {
-      setStage("signup"); // show signup form
+      setStage("signup");
     }
 
     setTriggerCheck(false);
-  }, [userExists,loading,triggerCheck]);
+  }, [userExists, loading, triggerCheck]);
 
-  const handleContinue = async () => {
+  const handleToggleInput = () => {
+    setIsEmail(!isEmail);
+    setError("");
+  };
+
+  const handlePhoneChange = (e) => {
+    const digits = e.target.value.replace(/\D/g, "");
+    setPhone(digits);
+    if (error) setError("");
+  };
+
+  const handleContinue = () => {
     setError("");
 
-    const emailValid = /^\S+@\S+\.\S+$/.test(email.trim());
-
-    const normalizedEmail = email.trim().toLowerCase();
-
     if (isEmail) {
-      if (!email.trim()) return setError("Please enter email");
-      if (!emailValid) return setError("Please Enter a valid email");
+      const trimmedEmail = email.trim().toLowerCase();
+      const ok = /^\S+@\S+\.\S+$/.test(trimmedEmail);
 
-      dispatch(checkUserExists(normalizedEmail));
+      if (!trimmedEmail) return setError("Please enter email");
+      if (!ok) return setError("Please enter a valid email");
+
+      dispatch(checkUserExists(trimmedEmail));
       setTriggerCheck(true);
     } else {
       const onlyDigits = phone.replace(/\D/g, "");
 
-      if (onlyDigits.length !== 10) {
+      if (onlyDigits.length !== 10)
         return setError("Phone number must be exactly 10 digits");
-      }
-
       setStage("signup");
     }
   };
+
+  const handleSignUp = () => {};
+
+  const handleLogin = () => {};
+
+  const ErrorCard = () => {
+    
+      error && (
+        <div className="card rounded-4 my-4">
+          <div className="card-body d-flex flex-row gap-3 align-items-center">
+            <span>
+              <svg
+                fill="#e07912"
+                width="23px"
+                height="23px"
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g>
+                  <path d="M15.83,13.23l-7-11.76a1,1,0,0,0-1.66,0L.16,13.3c-.38.64-.07,1.7.68,1.7H15.2C15.94,15,16.21,13.87,15.83,13.23Zm-7,.37H7.14V11.89h1.7Zm0-3.57H7.16L7,4H9Z" />
+                </g>
+              </svg>
+            </span>
+
+            <span className="fs-lg">{error}</span>
+          </div>
+        </div>
+      );
+    
+  };
+
+
   return (
     <div className="p-3">
       <h4>Welcome to Airbnb</h4>
@@ -97,28 +137,8 @@ const AuthForm = () => {
             </p>
           </div>
 
-          {error && (
-            <div className="card rounded-4 my-4">
-              <div className="card-body d-flex flex-row gap-3 align-items-center">
-                <span>
-                  <svg
-                    fill="#e07912"
-                    width="23px"
-                    height="23px"
-                    viewBox="0 0 16 16"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g>
-                      <path d="M15.83,13.23l-7-11.76a1,1,0,0,0-1.66,0L.16,13.3c-.38.64-.07,1.7.68,1.7H15.2C15.94,15,16.21,13.87,15.83,13.23Zm-7,.37H7.14V11.89h1.7Zm0-3.57H7.16L7,4H9Z" />
-                    </g>
-                  </svg>
-                </span>
-
-                <span className="fs-lg">{error}</span>
-              </div>
-            </div>
-          )}
-          <button className="btn submitbtn w-100">Continue</button>
+          <ErrorCard/>
+          <button className="btn submitbtn w-100" onClick={handleContinue}>Continue</button>
 
           <div className="text-center my-4">
             <h6 className="fs-small fw-semibold ortext">OR</h6>
