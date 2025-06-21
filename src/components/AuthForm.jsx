@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./css/input.css";
+import { useDispatch, useSelector } from "react-redux";
+import { checkUserExists } from "../redux/actions/UserAction";
 
 const AuthForm = () => {
   const [phone, setPhone] = useState("");
@@ -7,50 +9,55 @@ const AuthForm = () => {
 
   const [error, setError] = useState("");
   const [isEmail, setIsEmail] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [triggerCheck, setTriggerCheck] = useState(false);
+  const [stage, setStage] = useState("choose");
 
-  const validateInput = (e) => {
-    e.preventDefault();
+  const { userExists } = useSelector((state) => state.users);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!triggerCheck || loading) return;
+
+    if (userExists === true) {
+      setStage("login");
+    } else if (userExists === false) {
+      setStage("signup"); // show signup form
+    }
+
+    setTriggerCheck(false);
+  }, [userExists,loading,triggerCheck]);
+
+  const handleContinue = async () => {
+    setError("");
+
+    const emailValid = /^\S+@\S+\.\S+$/.test(email.trim());
+
+    const normalizedEmail = email.trim().toLowerCase();
 
     if (isEmail) {
-      const ok = /^\S+@\S+\.\S+$/.test(email);
+      if (!email.trim()) return setError("Please enter email");
+      if (!emailValid) return setError("Please Enter a valid email");
 
-      if(!email){
-           setError("Please Enter Email Address");
-           return;
-      }
-      else if(!ok) {
-        setError("Please Enter Valid Email");
-        return;
-      }
+      dispatch(checkUserExists(normalizedEmail));
+      setTriggerCheck(true);
     } else {
       const onlyDigits = phone.replace(/\D/g, "");
 
       if (onlyDigits.length !== 10) {
-        setError("Phone Number Should be exactly 10 Digits");
-        return;
+        return setError("Phone number must be exactly 10 digits");
       }
-    }
 
-    setError("");
-    console.log("valid data");
-  };
-
-  const handlephoneInputChange = (e) => {
-    const input = e.target.value.replace(/\D/g, "");
-
-    setPhone(input);
-
-    if (error) {
-      setError("");
+      setStage("signup");
     }
   };
-
   return (
     <div className="p-3">
       <h4>Welcome to Airbnb</h4>
 
       <div className="mt-3">
-        <form onSubmit={validateInput}>
+        <form>
           <div className="form-floating mb-3">
             {isEmail ? (
               <>
@@ -76,7 +83,6 @@ const AuthForm = () => {
                   id="floatingInput"
                   value={phone}
                   name="mobile"
-                  onChange={handlephoneInputChange}
                   maxLength={10}
                   placeholder="Enter Phone"
                 />
@@ -118,7 +124,10 @@ const AuthForm = () => {
             <h6 className="fs-small fw-semibold ortext">OR</h6>
           </div>
 
-          <button className="btn btn-outline-dark w-100 googleauthbtn" type="button"> 
+          <button
+            className="btn btn-outline-dark w-100 googleauthbtn"
+            type="button"
+          >
             <svg
               width="22px"
               height="22px"
@@ -146,7 +155,8 @@ const AuthForm = () => {
             <span>Continue With Google</span>
           </button>
           <button
-            className="btn btn-outline-dark w-100 googleauthbtn" type="button"
+            className="btn btn-outline-dark w-100 googleauthbtn"
+            type="button"
             onClick={() => {
               setIsEmail(!isEmail);
               setError("");
@@ -197,7 +207,10 @@ const AuthForm = () => {
               </>
             )}
           </button>
-          <button className="btn btn-outline-dark w-100 googleauthbtn" type="button">
+          <button
+            className="btn btn-outline-dark w-100 googleauthbtn"
+            type="button"
+          >
             <svg
               width="22px"
               height="22px"
