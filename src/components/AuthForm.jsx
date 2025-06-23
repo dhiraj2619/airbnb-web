@@ -6,11 +6,12 @@ import { checkUserExists } from "../redux/actions/UserAction";
 const AuthForm = () => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
 
   const [error, setError] = useState("");
   const [isEmail, setIsEmail] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [triggerCheck, setTriggerCheck] = useState(false);
+  const [trigger, setTrigger] = useState(false);
   const [stage, setStage] = useState("choose");
 
   const { userExists } = useSelector((state) => state.users);
@@ -18,46 +19,51 @@ const AuthForm = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!triggerCheck || loading) return;
+    if (!trigger || loading) return;
 
     if (userExists === true) {
-      setStage("login");
+      setStage("loginPass");
     } else if (userExists === false) {
       setStage("signup");
     }
 
-    setTriggerCheck(false);
-  }, [userExists, loading, triggerCheck]);
+    setTrigger(false);
+  }, [userExists, loading, trigger]);
+
+  const clearError = () => error && setError("");
 
   const handleToggleInput = () => {
     setIsEmail(!isEmail);
-    setError("");
+    setStage("choose");
+    clearError();
   };
 
   const handlePhoneChange = (e) => {
-    const digits = e.target.value.replace(/\D/g, "");
-    setPhone(digits);
-    if (error) setError("");
+    setPhone(e.target.value.replace(/\D/g, ""));
+    clearError();
   };
 
   const handleContinue = () => {
-    setError("");
+    clearError();
 
     if (isEmail) {
-      const trimmedEmail = email.trim().toLowerCase();
-      const ok = /^\S+@\S+\.\S+$/.test(trimmedEmail);
+      const trimmed = email.trim().toLowerCase();
 
-      if (!trimmedEmail) return setError("Please enter email");
-      if (!ok) return setError("Please enter a valid email");
+      if (!trimmed) {
+        return setError("Please enter email address.");
+      }
+      if (!/^\S+@\S+\.\S+$/.test(trimmed)) {
+        return setError("Please enter a valid email address.");
+      }
 
-      dispatch(checkUserExists(trimmedEmail));
-      setTriggerCheck(true);
-    } else {
-      const onlyDigits = phone.replace(/\D/g, "");
+      dispatch(checkUserExists(trimmed));
+      setTrigger(true);
+    }else{
+      if(phone.length !== 10){
+        return setError("Please enter a valid phone number.");
 
-      if (onlyDigits.length !== 10)
-        return setError("Phone number must be exactly 10 digits");
-      setStage("signup");
+      }
+      setStage("otp");
     }
   };
 
@@ -66,38 +72,32 @@ const AuthForm = () => {
   const handleLogin = () => {};
 
   const ErrorCard = () => {
-    
-      error && (
-        <div className="card rounded-4 my-4">
-          <div className="card-body d-flex flex-row gap-3 align-items-center">
-            <span>
-              <svg
-                fill="#e07912"
-                width="23px"
-                height="23px"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g>
-                  <path d="M15.83,13.23l-7-11.76a1,1,0,0,0-1.66,0L.16,13.3c-.38.64-.07,1.7.68,1.7H15.2C15.94,15,16.21,13.87,15.83,13.23Zm-7,.37H7.14V11.89h1.7Zm0-3.57H7.16L7,4H9Z" />
-                </g>
-              </svg>
-            </span>
+    error && (
+      <div className="card rounded-4 my-4">
+        <div className="card-body d-flex flex-row gap-3 align-items-center">
+          <span>
+            <svg
+              fill="#e07912"
+              width="23px"
+              height="23px"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g>
+                <path d="M15.83,13.23l-7-11.76a1,1,0,0,0-1.66,0L.16,13.3c-.38.64-.07,1.7.68,1.7H15.2C15.94,15,16.21,13.87,15.83,13.23Zm-7,.37H7.14V11.89h1.7Zm0-3.57H7.16L7,4H9Z" />
+              </g>
+            </svg>
+          </span>
 
-            <span className="fs-lg">{error}</span>
-          </div>
+          <span className="fs-lg">{error}</span>
         </div>
-      );
-    
+      </div>
+    );
   };
 
 
-  return (
-    <div className="p-3">
-      <h4>Welcome to Airbnb</h4>
-
-      <div className="mt-3">
-        <form>
+  const ChooseUi=()=>{
+      <>
           <div className="form-floating mb-3">
             {isEmail ? (
               <>
@@ -130,15 +130,18 @@ const AuthForm = () => {
               </>
             )}
           </div>
-          <div className="my-3">
+
+            <div className="my-3">
             <p className="fs-small">
               We’ll call or text you to confirm your number. Standard message
               and data rates apply.
             </p>
           </div>
 
-          <ErrorCard/>
-          <button className="btn submitbtn w-100" onClick={handleContinue}>Continue</button>
+          <ErrorCard />
+          <button className="btn submitbtn w-100" onClick={handleContinue}>
+            Continue
+          </button>
 
           <div className="text-center my-4">
             <h6 className="fs-small fw-semibold ortext">OR</h6>
@@ -249,7 +252,18 @@ const AuthForm = () => {
             </svg>
             <span>Continue With Facebook</span>
           </button>
-        </form>
+      </>
+  }
+
+  return (
+    <div className="p-3">
+      <h4>Welcome to Airbnb</h4>
+
+      <div className="mt-3">
+        <>
+        
+        
+        </>
       </div>
     </div>
   );
