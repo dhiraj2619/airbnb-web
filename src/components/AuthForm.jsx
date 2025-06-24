@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./css/input.css";
 import { useDispatch, useSelector } from "react-redux";
 import { checkUserExists } from "../redux/actions/UserAction";
+import Beatloader from "react-spinners/BeatLoader";
 
-const AuthForm = ({onStateChange}) => {
+const AuthForm = ({ onStateChange }) => {
   const {
     userExists,
     loading,
@@ -24,13 +25,13 @@ const AuthForm = ({onStateChange}) => {
   const [error, setError] = useState("");
   const [stage, setStage] = useState("check");
   const [emailChecked, setEmailChecked] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const clearError = () => error && setError("");
 
-
-  useEffect(()=>{
-    if(onStateChange) onStateChange(stage);
-  },[stage])
+  useEffect(() => {
+    if (onStateChange) onStateChange(stage);
+  }, [stage]);
   useEffect(() => {
     if (!emailChecked || loading) return;
 
@@ -59,40 +60,37 @@ const AuthForm = ({onStateChange}) => {
     dispatch(checkUserExists(trimmed));
   };
 
- const ErrorCard = () => {
-  if (!error) return null;
+  const ErrorCard = () => {
+    if (!error) return null;
 
-  return (
-    <div className="card rounded-4 my-4">
-      <div className="card-body d-flex flex-row gap-3 align-items-center">
-        <span>
-          <svg
-            fill="#e07912"
-            width="23px"
-            height="23px"
-            viewBox="0 0 16 16"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g>
-              <path d="M15.83,13.23l-7-11.76a1,1,0,0,0-1.66,0L.16,13.3c-.38.64-.07,1.7.68,1.7H15.2C15.94,15,16.21,13.87,15.83,13.23Zm-7,.37H7.14V11.89h1.7Zm0-3.57H7.16L7,4H9Z" />
-            </g>
-          </svg>
-        </span>
-        <span className="fs-lg">{error}</span>
+    return (
+      <div className="card rounded-4 my-4">
+        <div className="card-body d-flex flex-row gap-3 align-items-center">
+          <span>
+            <svg
+              fill="#e07912"
+              width="23px"
+              height="23px"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g>
+                <path d="M15.83,13.23l-7-11.76a1,1,0,0,0-1.66,0L.16,13.3c-.38.64-.07,1.7.68,1.7H15.2C15.94,15,16.21,13.87,15.83,13.23Zm-7,.37H7.14V11.89h1.7Zm0-3.57H7.16L7,4H9Z" />
+              </g>
+            </svg>
+          </span>
+          <span className="fs-lg">{error}</span>
+        </div>
       </div>
-    </div>
-  );
-};
-
+    );
+  };
 
   return (
     <div className="p-3 authcard">
-      
-
       {stage === "check" && (
         <div className="mt-3">
           <>
-          <h4 className="mb-4">Welcome to Airbnb</h4>
+            <h4 className="mb-4">Welcome to Airbnb</h4>
             <div className="form-floating mb-3">
               <input
                 type="email"
@@ -103,7 +101,7 @@ const AuthForm = ({onStateChange}) => {
                 name="email"
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  if (error) setError("");
+                  clearError();
                 }}
               />
               <label for="floatingInput">Email</label>
@@ -118,7 +116,7 @@ const AuthForm = ({onStateChange}) => {
 
             <ErrorCard />
             <button className="btn submitbtn w-100" onClick={handleContinue}>
-              Continue
+              {loading ? <Beatloader color="#fff" size={10} /> : "Continue"}
             </button>
 
             <div className="text-center my-4">
@@ -205,34 +203,33 @@ const AuthForm = ({onStateChange}) => {
       )}
       {stage === "signup" && (
         <>
-          <p className="mb-1">
-            Sign up with email: <strong>{email}</strong>
-          </p>
-
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="First Name"
-              value={signupData.firstName}
-              onChange={(e) =>
-                setSignupData({ ...signupData, firstName: e.target.value })
-              }
-            />
-            <label>First Name</label>
-          </div>
-
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Last Name"
-              value={signupData.lastName}
-              onChange={(e) =>
-                setSignupData({ ...signupData, lastName: e.target.value })
-              }
-            />
-            <label>Last Name</label>
+          <h5 className="fs-6">Legal Name</h5>
+          <div className="combine-inputs mt-3 mb-4 rounded-2">
+            <div className="form-floating border-1 border-bottom">
+              <input
+                type="text"
+                className="form-control border-0"
+                placeholder="First Name"
+                id="fname"
+                value={signupData.firstName}
+                onChange={(e) =>
+                  setSignupData({ ...signupData, firstName: e.target.value })
+                }
+              />
+              <label>First Name</label>
+            </div>
+            <div className="form-floating">
+              <input
+                type="text"
+                className="form-control border-0"
+                placeholder="Last Name"
+                value={signupData.lastName}
+                onChange={(e) =>
+                  setSignupData({ ...signupData, lastName: e.target.value })
+                }
+              />
+              <label>Last Name</label>
+            </div>
           </div>
 
           <div className="form-floating mb-3">

@@ -46,3 +46,10 @@ input[type="tel"]{
     background-color: #eff5f4 !important;
     color: #000;
 }
+.combine-inputs{
+  border: 1px solid #4e4e4e;
+}
+
+input:focus{
+  border: 1.5px solid #000 !important;
+}
