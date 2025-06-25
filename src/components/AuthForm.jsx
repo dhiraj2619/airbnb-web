@@ -59,6 +59,8 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
     }
 
    const res =  await dispatch(RegisterUser({...signupData,email}));
+
+   console.log("[SIGN-UP] Action returned:", res);
   };
 
   useEffect(() => {
@@ -154,7 +156,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
                   clearError();
                 }}
               />
-              <label for="floatingInput">Email</label>
+              <label htmlFor="floatingInput">Email</label>
             </div>
 
             <div className="my-3">

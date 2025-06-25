@@ -67,6 +67,9 @@ export const RegisterUser =
         };
       }
     } catch (error) {
+       dispatch({
+         type:REGISTER_USER_FAIL
+       })
         console.error(
        "[REGISTER_USER] caught error:",
        error.response?.data || error.message

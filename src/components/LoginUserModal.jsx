@@ -30,7 +30,7 @@ const LoginUserModal = ({ onModalClose, BackdropLogin }) => {
                     className="position-absolute start-0 px-3"
                     style={{ background: "none", border: "none" }}
                   >
-                    <i class="bi bi-arrow-left fs-5"></i>
+                    <i className="bi bi-arrow-left fs-5"></i>
                   </button>)
                 }
                 <span className="text-center ps-5">

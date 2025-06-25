@@ -3,7 +3,7 @@ import { CHECK_USER_FAIL, CHECK_USER_REQUEST, CHECK_USER_SUCCESS, REGISTER_USER_
 const intialState ={
     user: null,
     isAuthenticated: false,
-    loading: true,
+    loading: false,
     error: null,
     userExists:null
 }

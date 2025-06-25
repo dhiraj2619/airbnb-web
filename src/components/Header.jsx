@@ -123,7 +123,7 @@ const Header = () => {
                   <ul className="dropdown-menu submenu">
                     <li className="py-1">
                       <a className="dropdown-item" href="#">
-                        <i class="bi bi-question-circle me-1"></i> Help Center
+                        <i className="bi bi-question-circle me-1"></i> Help Center
                       </a>
                     </li>
                     <li className="py-1">
