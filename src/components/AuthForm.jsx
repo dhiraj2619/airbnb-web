@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./css/input.css";
 import { useDispatch, useSelector } from "react-redux";
-import { checkUserExists } from "../redux/actions/UserAction";
+import { checkUserExists, RegisterUser } from "../redux/actions/UserAction";
 import Beatloader from "react-spinners/BeatLoader";
+import { Link } from "react-router-dom";
 
-const AuthForm = ({ onStateChange }) => {
+const AuthForm = ({ onStateChange, stageFromParent }) => {
   const {
     userExists,
     loading,
@@ -19,19 +20,50 @@ const AuthForm = ({ onStateChange }) => {
     firstName: "",
     lastName: "",
     mobile: "",
+    dateofbirth: "",
     password: "",
   });
 
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [stage, setStage] = useState("check");
   const [emailChecked, setEmailChecked] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(true);
 
-  const clearError = () => error && setError("");
+  const clearError = () => {
+    if (error) setError("");
+    if (Object.keys(fieldErrors).length) setFieldErrors({});
+  };
+
+  const handleSignUp = async () => {
+    clearError();
+
+    const { firstName, lastName, email, mobile, password, dateofbirth } =
+      signupData;
+
+    const newErrors = {};
+
+    if (!firstName) newErrors.firstName = "first name is required";
+    if (!lastName) newErrors.lastName = "last name is required";
+    if (!email) newErrors.email = "email is required";
+    if (!mobile) newErrors.mobile = "mobile is required";
+    if (!dateofbirth) newErrors.dateofbirth = "date of birth is required";
+    if (!password) newErrors.password = "password is required";
+    else if (password.length < 6) {
+      newErrors.password = "password should at least 6 characters";
+    }
+
+    if (Object.keys(newErrors).length) {
+      setFieldErrors(newErrors);
+      return;
+    }
+
+    await dispatch(RegisterUser(signupData));
+  };
 
   useEffect(() => {
     if (onStateChange) onStateChange(stage);
   }, [stage]);
+
   useEffect(() => {
     if (!emailChecked || loading) return;
 
@@ -41,6 +73,23 @@ const AuthForm = ({ onStateChange }) => {
       setStage("signup");
     }
   }, [userExists, loading, emailChecked]);
+
+  useEffect(() => {
+    if (stageFromParent === "check") {
+      setStage("check");
+      setEmailChecked(false);
+      setEmail("");
+      setPassword("");
+      setSignupData({
+        firstName: "",
+        lastName: "",
+        mobile: "",
+        password: "",
+        dateofbirth: "",
+      });
+      setError("");
+    }
+  }, [stageFromParent]);
 
   useEffect(() => {
     if (reduxError) setError(reduxError);
@@ -198,7 +247,16 @@ const AuthForm = ({ onStateChange }) => {
             <label for="floatingInput">Password</label>
           </div>
           <ErrorCard />
+
           <button className="btn submitbtn w-100">Login</button>
+          <div className="mt-3 d-flex flex-column justify-content-start align-items-start">
+            <Link className="btn btn-link text-dark fs-normal fw-normal px-0 py-2">
+              Forgotten your password?
+            </Link>
+            <Link className="btn btn-link text-dark fs-normal fw-normal mt-1 px-0 py-1">
+              More login options
+            </Link>
+          </div>
         </>
       )}
       {stage === "signup" && (
@@ -208,7 +266,9 @@ const AuthForm = ({ onStateChange }) => {
             <div className="form-floating border-1 border-bottom">
               <input
                 type="text"
-                className="form-control border-0"
+                className={`form-control border-0 ${
+                  fieldErrors.firstName ? "is-invalid" : ""
+                }`}
                 placeholder="First Name"
                 id="fname"
                 value={signupData.firstName}
@@ -221,7 +281,9 @@ const AuthForm = ({ onStateChange }) => {
             <div className="form-floating">
               <input
                 type="text"
-                className="form-control border-0"
+                className={`form-control border-0 ${
+                  fieldErrors.lastName ? "is-invalid" : ""
+                }`}
                 placeholder="Last Name"
                 value={signupData.lastName}
                 onChange={(e) =>
@@ -232,37 +294,75 @@ const AuthForm = ({ onStateChange }) => {
             </div>
           </div>
 
-          <div className="form-floating mb-3">
-            <input
-              type="email"
-              className="form-control"
-              value={email}
-              readOnly
-            />
-            <label>Email</label>
-          </div>
+          {fieldErrors.firstName && (
+            <div className="invalid-feedback">{fieldErrors.firstName}</div>
+          )}
 
+          <p className="fs-small text-secondary">
+            Make sure this matches the name on your government ID. If you go by
+            another name, you can add a preferred first name.
+          </p>
+
+          <h5 className="fs-6 mb-3">Date of Birth</h5>
           <div className="form-floating mb-3">
             <input
-              type="tel"
-              className="form-control"
-              placeholder="Mobile Number"
-              maxLength="10"
-              value={signupData.mobile}
+              type="date"
+              className={`form-control ${
+                  fieldErrors.dateofbirth ? "is-invalid" : ""
+                }`}
+              value={signupData.dateofbirth}
+              name="dateofbirth"
               onChange={(e) =>
-                setSignupData({
-                  ...signupData,
-                  mobile: e.target.value.replace(/\D/g, ""),
-                })
+                setSignupData({ ...signupData, dateofbirth: e.target.value })
               }
             />
-            <label>Mobile Number</label>
+            <label>Date of Birth</label>
+           {fieldErrors.dateofbirth && (
+              <div className="invalid-feedback">{fieldErrors.dateofbirth}</div>
+            )}
+          </div>
+           
+
+          <p className="fs-small text-secondary">
+            To sign up, you need to be at least 18. Your birthday won’t be
+            shared with other people who use Airbnb.
+          </p>
+
+          <h5 className="fs-6 mb-3">Contact Info</h5>
+          <div className="combine-inputs mt-3 mb-4 rounded-2">
+            <div className="form-floating border-1 border-bottom">
+              <input
+                type="email"
+                className="form-control border-0"
+                value={email}
+                readOnly
+              />
+              <label>Email</label>
+            </div>
+
+            <div className="form-floating">
+              <input
+                type="tel"
+                className="form-control border-0"
+                placeholder="Mobile Number"
+                maxLength="10"
+                value={signupData.mobile}
+                onChange={(e) =>
+                  setSignupData({
+                    ...signupData,
+                    mobile: e.target.value.replace(/\D/g, ""),
+                  })
+                }
+              />
+              <label>Mobile Number</label>
+            </div>
           </div>
 
+          <h5 className="fs-6 mb-3">Password</h5>
           <div className="form-floating mb-3">
             <input
               type="password"
-              className="form-control"
+              className={`form-control ${fieldErrors.password ? "is-invalid":""}`}
               placeholder="Password"
               value={signupData.password}
               onChange={(e) =>
@@ -270,10 +370,19 @@ const AuthForm = ({ onStateChange }) => {
               }
             />
             <label>Password</label>
+              {fieldErrors.password && (
+              <div className="invalid-feedback">{fieldErrors.password}</div>
+            )}
           </div>
 
           <ErrorCard />
-          <button className="btn submitbtn w-100">Sign Up</button>
+          <button
+            className="btn submitbtn w-100"
+            disabled={loading}
+            onClick={handleSignUp}
+          >
+            {loading ? <Beatloader color="#fff" size={10} /> : "Sign up"}
+          </button>
         </>
       )}
     </div>

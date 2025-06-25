@@ -3,6 +3,9 @@ import {
   CHECK_USER_FAIL,
   CHECK_USER_REQUEST,
   CHECK_USER_SUCCESS,
+  REGISTER_USER_FAIL,
+  REGISTER_USER_REQUEST,
+  REGISTER_USER_SUCCESS,
 } from "../constants/UserConstant";
 import { ServerApi } from "../../config/ServerApi";
 
@@ -28,3 +31,41 @@ export const checkUserExists = (email) => async (dispatch) => {
     return false;
   }
 };
+
+export const RegisterUser =
+  ({ firstName, lastName, email, mobile, dateofbirth, password }) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: REGISTER_USER_REQUEST });
+
+      const { data } = await axios.post(`${ServerApi}/user/signup`, {
+        firstName,
+        lastName,
+        email,
+        mobile,
+        dateofbirth,
+        password,
+      });
+
+      if (data.success) {
+        dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user });
+
+        return {
+          success: true,
+          user: data.user,
+          token: data.token,
+        };
+      }
+    } catch (error) {
+        const errorMessage =
+        error.response?.data?.message || 'Something went wrong';
+
+      dispatch({
+        type: REGISTER_USER_FAIL,
+        payload: errorMessage,
+      });
+
+      return {success: false, message: errorMessage};
+
+    }
+  };

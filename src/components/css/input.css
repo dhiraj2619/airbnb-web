@@ -4,8 +4,9 @@ input:focus{
 input[type="text"],
 input[type="email"], 
 input[type="password"],
+input[type="date"],
 input[type="tel"]{
-    border: 1px solid #4e4d4d;
+    border: 1px solid #b0b0b0;
     transition: all 0.3s;
 }
 
@@ -23,7 +24,6 @@ input[type="tel"]{
 .authInput:focus{
     position: relative;
     border: 1.5px solid #2b2a2a !important;
-  
 }
 .googleauthbtn {
   position: relative;
@@ -47,7 +47,7 @@ input[type="tel"]{
     color: #000;
 }
 .combine-inputs{
-  border: 1px solid #4e4e4e;
+  border: 1px solid #b0b0b0;
 }
 
 input:focus{
