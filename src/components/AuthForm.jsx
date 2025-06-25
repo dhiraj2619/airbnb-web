@@ -22,6 +22,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
     mobile: "",
     dateofbirth: "",
     password: "",
+    email:""
   });
 
   const [error, setError] = useState("");
@@ -46,7 +47,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
     if (!lastName) newErrors.lastName = "last name is required";
     if (!email) newErrors.email = "email is required";
     if (!mobile) newErrors.mobile = "mobile is required";
-    if (!dateofbirth) newErrors.dateofbirth = "date of birth is required";
+    if (!dateofbirth) newErrors.dateofbirth = "Date of birth is required";
     if (!password) newErrors.password = "password is required";
     else if (password.length < 6) {
       newErrors.password = "password should at least 6 characters";
@@ -57,7 +58,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
       return;
     }
 
-    await dispatch(RegisterUser(signupData));
+   const res =  await dispatch(RegisterUser({...signupData,email}));
   };
 
   useEffect(() => {
@@ -164,7 +165,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
             </div>
 
             <ErrorCard />
-            <button className="btn submitbtn w-100" onClick={handleContinue}>
+            <button className="btn submitbtn w-100" onClick={handleContinue} disabled={loading}>
               {loading ? <Beatloader color="#fff" size={10} /> : "Continue"}
             </button>
 
@@ -281,6 +282,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
             <div className="form-floating">
               <input
                 type="text"
+                name="lastName"
                 className={`form-control border-0 ${
                   fieldErrors.lastName ? "is-invalid" : ""
                 }`}

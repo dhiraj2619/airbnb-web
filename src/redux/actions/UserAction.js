@@ -38,6 +38,15 @@ export const RegisterUser =
     try {
       dispatch({ type: REGISTER_USER_REQUEST });
 
+       console.log("[REGISTER_USER] outgoing POST body:", {
+       firstName,
+       lastName,
+       email,
+       mobile,
+       dateofbirth,
+       password,
+     });
+
       const { data } = await axios.post(`${ServerApi}/user/signup`, {
         firstName,
         lastName,
@@ -46,6 +55,7 @@ export const RegisterUser =
         dateofbirth,
         password,
       });
+      console.log("[REGISTER_USER] server responded:", data);
 
       if (data.success) {
         dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user });
@@ -57,15 +67,10 @@ export const RegisterUser =
         };
       }
     } catch (error) {
-        const errorMessage =
-        error.response?.data?.message || 'Something went wrong';
-
-      dispatch({
-        type: REGISTER_USER_FAIL,
-        payload: errorMessage,
-      });
-
-      return {success: false, message: errorMessage};
+        console.error(
+       "[REGISTER_USER] caught error:",
+       error.response?.data || error.message
+     );
 
     }
   };
