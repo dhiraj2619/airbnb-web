@@ -3,12 +3,13 @@ import "./css/input.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   checkUserExists,
-  GoogleLogin,
+  GoogleLogin as googleLoginAction,
   RegisterUser,
 } from "../redux/actions/UserAction";
 import Beatloader from "react-spinners/BeatLoader";
 import { Link } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
+import { nanoid } from "nanoid";
 
 const AuthForm = ({ onStateChange, stageFromParent }) => {
   const {
@@ -142,12 +143,21 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
     );
   };
 
-  const SignInWithGoogle = useGoogleLogin({
+  const signInWithGoogle = useGoogleLogin({
     flow: "implicit",
     scope: "openid email profile",
-    onSuccess: async ({ credentials }) => {
-      dispatch(GoogleLogin(credentials));
-    },
+    response_type: "id_token token",
+    nonce         : nanoid(),
+    ux_mode       : "popup",
+    onSuccess      : async (tokenRes) => {
+
+     if (tokenRes?.id_token) {
+       dispatch(googleLoginAction(tokenRes.id_token));
+     } else {
+       setError("Google did not return an id_token");
+     }
+   },
+   
     onError: () => setError("Google sign-in failed, please try again."),
   });
 
@@ -221,7 +231,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
             <button
               className="btn btn-outline-dark w-100 googleauthbtn"
               type="button"
-              onClick={()=>SignInWithGoogle()}
+              onClick={() => signInWithGoogle()}
             >
               <svg
                 width="22px"
