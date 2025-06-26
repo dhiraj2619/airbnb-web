@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./css/input.css";
 import { useDispatch, useSelector } from "react-redux";
-import { checkUserExists, RegisterUser } from "../redux/actions/UserAction";
+import {
+  checkUserExists,
+  GoogleLogin,
+  RegisterUser,
+} from "../redux/actions/UserAction";
 import Beatloader from "react-spinners/BeatLoader";
 import { Link } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const AuthForm = ({ onStateChange, stageFromParent }) => {
   const {
@@ -22,7 +27,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
     mobile: "",
     dateofbirth: "",
     password: "",
-    email:""
+    email: "",
   });
 
   const [error, setError] = useState("");
@@ -33,34 +38,6 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
   const clearError = () => {
     if (error) setError("");
     if (Object.keys(fieldErrors).length) setFieldErrors({});
-  };
-
-  const handleSignUp = async () => {
-    clearError();
-
-    const { firstName, lastName, email, mobile, password, dateofbirth } =
-      signupData;
-
-    const newErrors = {};
-
-    if (!firstName) newErrors.firstName = "first name is required";
-    if (!lastName) newErrors.lastName = "last name is required";
-    if (!email) newErrors.email = "email is required";
-    if (!mobile) newErrors.mobile = "mobile is required";
-    if (!dateofbirth) newErrors.dateofbirth = "Date of birth is required";
-    if (!password) newErrors.password = "password is required";
-    else if (password.length < 6) {
-      newErrors.password = "password should at least 6 characters";
-    }
-
-    if (Object.keys(newErrors).length) {
-      setFieldErrors(newErrors);
-      return;
-    }
-
-   const res =  await dispatch(RegisterUser({...signupData,email}));
-
-   console.log("[SIGN-UP] Action returned:", res);
   };
 
   useEffect(() => {
@@ -111,6 +88,68 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
     setEmailChecked(true);
     dispatch(checkUserExists(trimmed));
   };
+
+  const handleSignUp = async () => {
+    console.log("[SIGN-UP] handleSignUp clicked");
+    clearError();
+
+    const { firstName, lastName, mobile, password, dateofbirth } = signupData;
+
+    const newErrors = {};
+
+    if (!firstName) newErrors.firstName = "first name is required";
+    if (!lastName) newErrors.lastName = "last name is required";
+    if (!email) newErrors.email = "email is required";
+    if (!mobile) newErrors.mobile = "mobile is required";
+    if (!dateofbirth) newErrors.dateofbirth = "Date of birth is required";
+    if (!password) newErrors.password = "password is required";
+    else if (password.length < 8) {
+      newErrors.password = "password should at least 8 characters";
+    }
+
+    if (dateofbirth) {
+      const dob = new Date(dateofbirth);
+      const today = new Date();
+
+      let age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < dob.getDate())
+      ) {
+        age--;
+      }
+
+      if (age < 18) {
+        newErrors.dateofbirth = "Your must be atleast 18 years old";
+      }
+    }
+
+    if (Object.keys(newErrors).length) {
+      setFieldErrors(newErrors);
+      return;
+    }
+
+    const res = await dispatch(
+      RegisterUser({
+        firstName,
+        lastName,
+        email,
+        mobile,
+        dateofbirth,
+        password,
+      })
+    );
+  };
+
+  const SignInWithGoogle = useGoogleLogin({
+    flow: "implicit",
+    scope: "openid email profile",
+    onSuccess: async ({ credentials }) => {
+      dispatch(GoogleLogin(credentials));
+    },
+    onError: () => setError("Google sign-in failed, please try again."),
+  });
 
   const ErrorCard = () => {
     if (!error) return null;
@@ -167,7 +206,11 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
             </div>
 
             <ErrorCard />
-            <button className="btn submitbtn w-100" onClick={handleContinue} disabled={loading}>
+            <button
+              className="btn submitbtn w-100"
+              onClick={handleContinue}
+              disabled={loading}
+            >
               {loading ? <Beatloader color="#fff" size={10} /> : "Continue"}
             </button>
 
@@ -178,6 +221,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
             <button
               className="btn btn-outline-dark w-100 googleauthbtn"
               type="button"
+              onClick={()=>SignInWithGoogle()}
             >
               <svg
                 width="22px"
@@ -312,8 +356,8 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
             <input
               type="date"
               className={`form-control ${
-                  fieldErrors.dateofbirth ? "is-invalid" : ""
-                }`}
+                fieldErrors.dateofbirth ? "is-invalid" : ""
+              }`}
               value={signupData.dateofbirth}
               name="dateofbirth"
               onChange={(e) =>
@@ -321,11 +365,10 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
               }
             />
             <label>Date of Birth</label>
-           {fieldErrors.dateofbirth && (
+            {fieldErrors.dateofbirth && (
               <div className="invalid-feedback">{fieldErrors.dateofbirth}</div>
             )}
           </div>
-           
 
           <p className="fs-small text-secondary">
             To sign up, you need to be at least 18. Your birthday won’t be
@@ -337,9 +380,13 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
             <div className="form-floating border-1 border-bottom">
               <input
                 type="email"
+                name="email"
                 className="form-control border-0"
                 value={email}
-                readOnly
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, email: undefined }));
+                }}
               />
               <label>Email</label>
             </div>
@@ -366,7 +413,9 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
           <div className="form-floating mb-3">
             <input
               type="password"
-              className={`form-control ${fieldErrors.password ? "is-invalid":""}`}
+              className={`form-control ${
+                fieldErrors.password ? "is-invalid" : ""
+              }`}
               placeholder="Password"
               value={signupData.password}
               onChange={(e) =>
@@ -374,7 +423,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
               }
             />
             <label>Password</label>
-              {fieldErrors.password && (
+            {fieldErrors.password && (
               <div className="invalid-feedback">{fieldErrors.password}</div>
             )}
           </div>

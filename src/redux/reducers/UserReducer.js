@@ -1,4 +1,4 @@
-import { CHECK_USER_FAIL, CHECK_USER_REQUEST, CHECK_USER_SUCCESS, REGISTER_USER_FAIL, REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS } from "../constants/UserConstant"
+import { CHECK_USER_FAIL, CHECK_USER_REQUEST, CHECK_USER_SUCCESS, GOOGLE_LOGIN_FAIL, GOOGLE_LOGIN_REQUEST, GOOGLE_LOGIN_SUCCESS, REGISTER_USER_FAIL, REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS } from "../constants/UserConstant"
 
 const intialState ={
     user: null,
@@ -12,6 +12,7 @@ export const UserReducer = (state=intialState, action) => {
     switch(action.type) {
         case CHECK_USER_REQUEST:
         case REGISTER_USER_REQUEST:
+        case GOOGLE_LOGIN_REQUEST:
             return{
                 ...state,
                 loading:true,
@@ -25,15 +26,15 @@ export const UserReducer = (state=intialState, action) => {
                 loading:false,
                 userExists:action.payload,
             }
-        case REGISTER_USER_SUCCESS:{
+        case REGISTER_USER_SUCCESS:
+        case GOOGLE_LOGIN_SUCCESS:
             return{
                 ...state,
                  loading:false,
                  isAuthenticated:true,
                  user:action.payload
                  
-            }
-        }
+            }     
         case CHECK_USER_FAIL:
             return{
                 ...state,
@@ -42,14 +43,15 @@ export const UserReducer = (state=intialState, action) => {
                 error: action.payload
             }
 
-        case REGISTER_USER_FAIL:{
+        case REGISTER_USER_FAIL:
+        case GOOGLE_LOGIN_FAIL:
             return{
                 ...state,
                 loading:false,
                 isAuthenticated:false,
                 error:action.payload
             }
-        }
+        
         default:
             return state;
     }
