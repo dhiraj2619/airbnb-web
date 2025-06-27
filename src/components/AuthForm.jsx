@@ -3,13 +3,13 @@ import "./css/input.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   checkUserExists,
-  GoogleLogin as googleLoginAction,
+  GoogleLogin as GoogleLoginAction,
   RegisterUser,
 } from "../redux/actions/UserAction";
 import Beatloader from "react-spinners/BeatLoader";
 import { Link } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-import { nanoid } from "nanoid";
+import axios from "axios";
 
 const AuthForm = ({ onStateChange, stageFromParent }) => {
   const {
@@ -35,6 +35,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [stage, setStage] = useState("check");
   const [emailChecked, setEmailChecked] = useState(false);
+  const [loadingContinue, setLoadingContinue] = useState(false);
 
   const clearError = () => {
     if (error) setError("");
@@ -78,16 +79,22 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
 
   const handleContinue = async () => {
     clearError();
+    setLoadingContinue(true);
+    try {
+      const trimmed = email.trim().toLowerCase();
 
-    const trimmed = email.trim().toLowerCase();
+      if (!trimmed) return setError("Please enter an email address.");
+      if (!/^\S+@\S+\.\S+$/.test(trimmed)) {
+        return setError("Please enter a valid email address.");
+      }
 
-    if (!trimmed) return setError("Please enter an email address.");
-    if (!/^\S+@\S+\.\S+$/.test(trimmed)) {
-      return setError("Please enter a valid email address.");
+      setEmailChecked(true);
+      dispatch(checkUserExists(trimmed));
+    } catch (error) {
+      setError("Authentication failed");
+    } finally {
+      setLoadingContinue(false);
     }
-
-    setEmailChecked(true);
-    dispatch(checkUserExists(trimmed));
   };
 
   const handleSignUp = async () => {
@@ -143,23 +150,9 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
     );
   };
 
-  const signInWithGoogle = useGoogleLogin({
-    flow: "implicit",
-    scope: "openid email profile",
-    response_type: "id_token token",
-    nonce         : nanoid(),
-    ux_mode       : "popup",
-    onSuccess      : async (tokenRes) => {
-
-     if (tokenRes?.id_token) {
-       dispatch(googleLoginAction(tokenRes.id_token));
-     } else {
-       setError("Google did not return an id_token");
-     }
-   },
-   
-    onError: () => setError("Google sign-in failed, please try again."),
-  });
+const handleGoogleSignin=()=>{
+        window.location.href = "https://airbnb-server-m98l.onrender.com/api/v1/user/google";
+    }
 
   const ErrorCard = () => {
     if (!error) return null;
@@ -219,9 +212,13 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
             <button
               className="btn submitbtn w-100"
               onClick={handleContinue}
-              disabled={loading}
+              disabled={loadingContinue}
             >
-              {loading ? <Beatloader color="#fff" size={10} /> : "Continue"}
+              {loadingContinue ? (
+                <Beatloader color="#fff" size={10} />
+              ) : (
+                "Continue"
+              )}
             </button>
 
             <div className="text-center my-4">
@@ -231,7 +228,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
             <button
               className="btn btn-outline-dark w-100 googleauthbtn"
               type="button"
-              onClick={() => signInWithGoogle()}
+              onClick={handleGoogleSignin}
             >
               <svg
                 width="22px"

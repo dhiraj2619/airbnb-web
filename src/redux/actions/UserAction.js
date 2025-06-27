@@ -80,12 +80,12 @@ export const RegisterUser =
     }
   };
 
-export const GoogleLogin = (id_token) => async (dispatch) => {
+export const GoogleLogin = (access_token ) => async (dispatch) => {
   try {
     dispatch({ type: GOOGLE_LOGIN_REQUEST });
 
     const { data } = await axios.post(`${ServerApi}/user/google-login`, {
-      id_token
+      access_token 
     });
 
     dispatch({ type: GOOGLE_LOGIN_SUCCESS, payload: data.user });
