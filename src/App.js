@@ -14,6 +14,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/become-host" element={<LoginHost/>} />
         <Route path="/google-auth-success" element={<GoogleAuthSuccess/>} />
+        <Route path="/complete-basic-profile" element={<GoogleAuthSuccess/>} />
       </Routes>
     </>
   );
