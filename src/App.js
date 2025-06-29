@@ -3,7 +3,7 @@ import Home from "./pages/Home";
 import Header from "./components/Header";
 import { Route, Routes } from "react-router-dom";
 import LoginHost from "./components/LoginHost";
-import GoogleAuthSuccess from "./components/GoogleAuthSuccess";
+import ProfileCompletion from "./components/ProfileCompletion";
 
 const App = () => {
   return (
@@ -13,8 +13,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/become-host" element={<LoginHost/>} />
-        <Route path="/google-auth-success" element={<GoogleAuthSuccess/>} />
-        <Route path="/complete-basic-profile" element={<GoogleAuthSuccess/>} />
+      
+        <Route path="/complete-profile" element={<ProfileCompletion/>} />
       </Routes>
     </>
   );

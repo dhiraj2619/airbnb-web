@@ -76,7 +76,7 @@ const Header = () => {
               </Link>
 
               <div className="collapse navbar-collapse" id="navbarNav">
-                {location.pathname === "/become-host" ? (
+                {location.pathname === "/become-host" || location.pathname === "/complete-profile" ? (
                   <ul className="navbar-nav mx-auto"></ul>
                 ) : (
                   <ul className="navbar-nav mx-auto">
@@ -139,7 +139,7 @@ const Header = () => {
         </div>
 
 
-        {location.pathname === '/become-host' ? "" :   <div className="groupsearch my-3">
+        {location.pathname === "/become-host" || location.pathname === "/complete-profile" ? "" :   <div className="groupsearch my-3">
           <div className="container-fluid">
             <div className="row d-flex justify-content-center">
               <div className="col-7">

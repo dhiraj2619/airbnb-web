@@ -18,7 +18,7 @@ const GoogleLoginButton = () => {
 
                 localStorage.setItem('authToken',token);
 
-                window.location.href = '/complete-basic-profile'
+                window.location.href = '/complete-profile'
             } catch (error) {
                 console.error("Error logging in with Google", error);
             }

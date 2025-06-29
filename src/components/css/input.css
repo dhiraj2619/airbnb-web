@@ -1,11 +1,12 @@
-input:focus{
+input:focus,select:focus,textarea:focus{
     box-shadow: none !important;
 }
 input[type="text"],
 input[type="email"], 
 input[type="password"],
 input[type="date"],
-input[type="tel"]{
+input[type="tel"],
+select{
     border: 1px solid #b0b0b0;
     transition: all 0.3s;
 }
@@ -21,9 +22,9 @@ input[type="tel"]{
       color: #fff !important;
 }
 
-.authInput:focus{
+.authInput:focus,select:focus,textarea:focus{
     position: relative;
-    border: 1.5px solid #2b2a2a !important;
+    border: 2px solid #2b2a2a !important;
 }
 .googleauthbtn {
   position: relative;
