@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import AuthForm from "./AuthForm";
+import { useSelector } from "react-redux";
 
 const LoginHost = () => {
   const [formStage, setFormStage] = useState("check");
 
+   const {
+    existingUser
+  } = useSelector((state) => state.users);
+
   const getTitle = () => {
     switch (formStage) {
       case "login":
-        return "Login to Your Account";
+          return existingUser?.googleId
+        ? `Welcome back, ${existingUser.firstName}`
+        : "Login to Your Account";
 
       case "signup":
         return "Finish Signing up";
@@ -36,7 +43,7 @@ const LoginHost = () => {
               <h6 className="card-title mb-0">{getTitle()}</h6>
             </div>
             <div className="card-body">
-              <AuthForm stageFromParent={formStage} onStateChange={setFormStage} />
+              <AuthForm stageFromParent={formStage} onStateChange={setFormStage} role="host"/>
             </div>
           </div>
         </div>

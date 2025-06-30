@@ -1,26 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./css/input.css";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  checkUserExists,
-  GoogleLogin as GoogleLoginAction,
-  RegisterUser,
-} from "../redux/actions/UserAction";
+import { checkUserExists, RegisterUser } from "../redux/actions/UserAction";
 import Beatloader from "react-spinners/BeatLoader";
-import { Link } from "react-router-dom";
-import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
-import { ServerApi } from "../config/ServerApi";
+import { Link, useNavigate } from "react-router-dom";
 import GoogleLoginButton from "../UI/GoogleLoginButton";
 
-const AuthForm = ({ onStateChange, stageFromParent }) => {
+const AuthForm = ({ onStateChange, stageFromParent, role = "user" }) => {
   const {
     userExists,
     loading,
+    existingUser,
     error: reduxError,
   } = useSelector((state) => state.users);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,7 +32,6 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [stage, setStage] = useState("check");
   const [emailChecked, setEmailChecked] = useState(false);
-  const [loadingContinue, setLoadingContinue] = useState(false);
 
   const clearError = () => {
     if (error) setError("");
@@ -81,7 +75,7 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
 
   const handleContinue = async () => {
     clearError();
-    setLoadingContinue(true);
+
     try {
       const trimmed = email.trim().toLowerCase();
 
@@ -94,8 +88,6 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
       dispatch(checkUserExists(trimmed));
     } catch (error) {
       setError("Authentication failed");
-    } finally {
-      setLoadingContinue(false);
     }
   };
 
@@ -148,8 +140,13 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
         mobile,
         dateofbirth,
         password,
+        role,
       })
     );
+
+    if (res) {
+      navigate("/");
+    }
   };
 
   const ErrorCard = () => {
@@ -210,13 +207,9 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
             <button
               className="btn submitbtn w-100"
               onClick={handleContinue}
-              disabled={loadingContinue}
+              disabled={loading}
             >
-              {loadingContinue ? (
-                <Beatloader color="#fff" size={10} />
-              ) : (
-                "Continue"
-              )}
+              {loading ? <Beatloader color="#fff" size={10} /> : "Continue"}
             </button>
 
             <div className="text-center my-4">
@@ -268,32 +261,52 @@ const AuthForm = ({ onStateChange, stageFromParent }) => {
 
       {stage === "login" && (
         <>
-          <div className="form-floating mb-3">
-            <input
-              type="password"
-              className="form-control authInput"
-              id="floatingInput"
-              placeholder="Enter Password"
-              value={password}
-              name="password"
-              onChange={(e) => {
-                setPassword(e.target.value);
-                clearError();
-              }}
-            />
-            <label for="floatingInput">Password</label>
-          </div>
-          <ErrorCard />
+          {existingUser?.googleId ? (
+            <>
+              <div className="my-3 d-flex justify-content-center">
+                   <div className="user-profile d-flex justify-content-center align-items-center">
+                       <h3 className="fs-1 text-white">{existingUser.firstName.charAt(0)}</h3>
+                   </div>
+              </div>
+              <GoogleLoginButton/>
 
-          <button className="btn submitbtn w-100">Login</button>
-          <div className="mt-3 d-flex flex-column justify-content-start align-items-start">
-            <Link className="btn btn-link text-dark fs-normal fw-normal px-0 py-2">
-              Forgotten your password?
-            </Link>
-            <Link className="btn btn-link text-dark fs-normal fw-normal mt-1 px-0 py-1">
-              More login options
-            </Link>
-          </div>
+              <div className="mt-3 d-flex flex-row justify-content-start align-items-center">
+                 <span className="text-dark fs-normal fw-normal">Not You? </span>
+                <Link className="btn btn-link text-dark fs-normal fw-bold" onClick={()=>setStage("check")}>
+                  Use Another Account
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              {" "}
+              <div className="form-floating mb-3">
+                <input
+                  type="password"
+                  className="form-control authInput"
+                  id="floatingInput"
+                  placeholder="Enter Password"
+                  value={password}
+                  name="password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    clearError();
+                  }}
+                />
+                <label for="floatingInput">Password</label>
+              </div>
+              <ErrorCard />
+              <button className="btn submitbtn w-100">Login</button>
+              <div className="mt-3 d-flex flex-column justify-content-start align-items-start">
+                <Link className="btn btn-link text-dark fs-normal fw-normal px-0 py-2">
+                  Forgotten your password?
+                </Link>
+                <Link className="btn btn-link text-dark fs-normal fw-normal mt-1 px-0 py-1">
+                  More login options
+                </Link>
+              </div>
+            </>
+          )}
         </>
       )}
       {stage === "signup" && (

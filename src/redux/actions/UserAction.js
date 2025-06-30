@@ -20,7 +20,7 @@ export const checkUserExists = (email) => async (dispatch) => {
       email,
     });
 
-    dispatch({ type: CHECK_USER_SUCCESS, payload: data.userExists });
+    dispatch({ type: CHECK_USER_SUCCESS, payload: {userExists:data.userExists,user:data.user} });
 
     return data.userExists;
   } catch (error) {
@@ -36,7 +36,7 @@ export const checkUserExists = (email) => async (dispatch) => {
 };
 
 export const RegisterUser =
-  ({ firstName, lastName, email, mobile, dateofbirth, password }) =>
+  ({ firstName, lastName, email, mobile, dateofbirth, password,role }) =>
   async (dispatch) => {
     try {
       dispatch({ type: REGISTER_USER_REQUEST });
@@ -48,6 +48,7 @@ export const RegisterUser =
         mobile,
         dateofbirth,
         password,
+        role
       });
 
       const { data } = await axios.post(`${ServerApi}/user/signup`, {
@@ -57,6 +58,8 @@ export const RegisterUser =
         mobile,
         dateofbirth,
         password,
+        address: "N/A",
+        role
       });
       console.log("[REGISTER_USER] server responded:", data);
 
@@ -80,12 +83,12 @@ export const RegisterUser =
     }
   };
 
-export const GoogleLogin = (access_token ) => async (dispatch) => {
+export const GoogleLogin = (access_token) => async (dispatch) => {
   try {
     dispatch({ type: GOOGLE_LOGIN_REQUEST });
 
     const { data } = await axios.post(`${ServerApi}/user/google-login`, {
-      access_token 
+      access_token,
     });
 
     dispatch({ type: GOOGLE_LOGIN_SUCCESS, payload: data.user });

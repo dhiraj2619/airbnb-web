@@ -54,3 +54,9 @@ select{
 input:focus{
   border: 1.5px solid #000 !important;
 }
+.user-profile{
+   background-color: #232323;
+   height: 100px;
+   width: 100px;
+   border-radius: 90px;
+}

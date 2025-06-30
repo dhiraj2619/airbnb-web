@@ -3,8 +3,10 @@ import "../components/css/input.css";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { ServerApi } from "../config/ServerApi";
+import { useNavigate } from "react-router-dom";
 
 const GoogleLoginButton = () => {
+  const navigate = useNavigate();
 
     const login= useGoogleLogin({
         onSuccess:async(tokenResponse)=>{
@@ -18,7 +20,7 @@ const GoogleLoginButton = () => {
 
                 localStorage.setItem('authToken',token);
 
-                window.location.href = '/complete-profile'
+                navigate('/complete-profile')
             } catch (error) {
                 console.error("Error logging in with Google", error);
             }

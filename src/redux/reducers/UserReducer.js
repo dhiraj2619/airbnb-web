@@ -24,7 +24,8 @@ export const UserReducer = (state=intialState, action) => {
             return{
                 ...state,
                 loading:false,
-                userExists:action.payload,
+                userExists:action.payload.userExists,
+                existingUser:action.payload.user
             }
         case REGISTER_USER_SUCCESS:
         case GOOGLE_LOGIN_SUCCESS:

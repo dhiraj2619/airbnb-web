@@ -44,7 +44,7 @@ const LoginUserModal = ({ onModalClose, BackdropLogin }) => {
               ></button>
             </div>
             <div className="modal-body">
-                <AuthForm stageFromParent={formStage}  onStateChange={setFormStage}/>
+                <AuthForm stageFromParent={formStage}  onStateChange={setFormStage} role="user"/>
             </div>
            
           </div>
