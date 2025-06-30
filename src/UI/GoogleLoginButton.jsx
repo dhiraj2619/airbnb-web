@@ -1,26 +1,29 @@
 import React from "react";
 import "../components/css/input.css";
 import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
-import { ServerApi } from "../config/ServerApi";
+
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { googleLogin } from "../redux/actions/UserAction";
 
 const GoogleLoginButton = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
     const login= useGoogleLogin({
         onSuccess:async(tokenResponse)=>{
             try {
-                const {access_token} = tokenResponse;
+               const user =  await dispatch(googleLogin(tokenResponse.access_token));
 
+               if(!user) return;
 
-                const res = await axios.post(`${ServerApi}/user/google-login`,{token:access_token});
-
-                const {token,user} = res.data;
-
-                localStorage.setItem('authToken',token);
-
-                navigate('/complete-profile')
+               const {dateofbirth,mobile} = user;
+                if(!dateofbirth || !mobile) {
+                    navigate("/complete-profile");
+                } else {
+                    navigate("/");
+                }
+                               
             } catch (error) {
                 console.error("Error logging in with Google", error);
             }

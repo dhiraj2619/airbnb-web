@@ -20,7 +20,10 @@ export const checkUserExists = (email) => async (dispatch) => {
       email,
     });
 
-    dispatch({ type: CHECK_USER_SUCCESS, payload: {userExists:data.userExists,user:data.user} });
+    dispatch({
+      type: CHECK_USER_SUCCESS,
+      payload: { userExists: data.userExists, user: data.user },
+    });
 
     return data.userExists;
   } catch (error) {
@@ -36,7 +39,7 @@ export const checkUserExists = (email) => async (dispatch) => {
 };
 
 export const RegisterUser =
-  ({ firstName, lastName, email, mobile, dateofbirth, password,role }) =>
+  ({ firstName, lastName, email, mobile, dateofbirth, password, role }) =>
   async (dispatch) => {
     try {
       dispatch({ type: REGISTER_USER_REQUEST });
@@ -48,7 +51,7 @@ export const RegisterUser =
         mobile,
         dateofbirth,
         password,
-        role
+        role,
       });
 
       const { data } = await axios.post(`${ServerApi}/user/signup`, {
@@ -59,7 +62,7 @@ export const RegisterUser =
         dateofbirth,
         password,
         address: "N/A",
-        role
+        role,
       });
       console.log("[REGISTER_USER] server responded:", data);
 
@@ -83,20 +86,30 @@ export const RegisterUser =
     }
   };
 
-export const GoogleLogin = (access_token) => async (dispatch) => {
+export const googleLogin = (accessToken) => async (dispatch) => {
   try {
     dispatch({ type: GOOGLE_LOGIN_REQUEST });
 
     const { data } = await axios.post(`${ServerApi}/user/google-login`, {
-      access_token,
+      token: accessToken,
     });
 
-    dispatch({ type: GOOGLE_LOGIN_SUCCESS, payload: data.user });
+    const { token, user } = data;
 
-    localStorage.setItem("token", data.token);
+    localStorage.setItem("authToken", token);
+    localStorage.setItem("user", JSON.stringify(user));
+
+    dispatch({
+      type: GOOGLE_LOGIN_SUCCESS,
+      payload: user,
+    });
+
+    return user;
   } catch (error) {
-    const msg = error.response?.data?.message || error.message;
-    dispatch({ type: GOOGLE_LOGIN_FAIL, payload: msg });
-    return { success: false, message: msg };
+    dispatch({
+      type: GOOGLE_LOGIN_FAIL,
+      payload: error.response?.data?.message || "Google login failed",
+    });
+    return null;
   }
 };
