@@ -6,6 +6,7 @@ import {
   GOOGLE_LOGIN_FAIL,
   GOOGLE_LOGIN_REQUEST,
   GOOGLE_LOGIN_SUCCESS,
+  LOGOUT_USER,
   REGISTER_USER_FAIL,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
@@ -66,6 +67,8 @@ export const RegisterUser =
       });
       console.log("[REGISTER_USER] server responded:", data);
 
+      localStorage.setItem("token",data.token);
+
       if (data.success) {
         dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user });
 
@@ -113,3 +116,18 @@ export const googleLogin = (accessToken) => async (dispatch) => {
     return null;
   }
 };
+
+
+export const LogoutUser=()=>async(dispatch)=>{
+  try {
+    
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+     dispatch({type:LOGOUT_USER});
+  } catch (error) {
+      console.error("log out failed");
+      
+  }
+}

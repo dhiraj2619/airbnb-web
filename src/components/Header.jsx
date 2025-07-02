@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import Searchbar from "./Searchbar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LoginUserModal from "./LoginUserModal";
+import { useDispatch, useSelector } from "react-redux";
+import { LogoutUser } from "../redux/actions/UserAction";
 
 const Header = () => {
+  const {user, isAuthenticated } = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+
   const PropertyType = [
     { id: 1, name: "Home", icon: require("../assets/img/home.png") },
     { id: 2, name: "Hotel", icon: require("../assets/img/hotel.png") },
@@ -19,37 +24,46 @@ const Header = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  
-
 
   const handleSelect = (id) => setSelectedTypeId(id);
 
-
-  useEffect(()=>{
-     if(showHostModal){
-       document.body.classList.add("modal-open");
-     }
-     else{
+  useEffect(() => {
+    if (showHostModal) {
+      document.body.classList.add("modal-open");
+    } else {
       document.body.classList.remove("modal-open");
-     }
-      return () => document.body.classList.remove("modal-open");
-  },[showHostModal])
+    }
+    return () => document.body.classList.remove("modal-open");
+  }, [showHostModal]);
 
-  const CloseModal =()=>{
+  const CloseModal = () => {
     setShowHostModal(false);
     setSelectedTypeId(null);
-  }
+  };
 
-  const CloseLoginModal=()=>{
+  const CloseLoginModal = () => {
     setShowLoginModal(false);
+  };
+
+  const handleLogout=()=>{
+    dispatch(LogoutUser());
+    navigate('/');
   }
 
   const Backdrop = showHostModal ? (
-    <div className="modal-backdrop fade show" onClick={()=>setShowHostModal(false)}></div> ): null
+    <div
+      className="modal-backdrop fade show"
+      onClick={() => setShowHostModal(false)}
+    ></div>
+  ) : null;
 
   const BackdropLogin = showLoginModal ? (
-    <div className="modal-backdrop fade show" onClick={()=>setShowLoginModal(false)}></div> ): null
-  
+    <div
+      className="modal-backdrop fade show"
+      onClick={() => setShowLoginModal(false)}
+    ></div>
+  ) : null;
+
   return (
     <>
       <div className="border-bottom bg-header">
@@ -76,7 +90,8 @@ const Header = () => {
               </Link>
 
               <div className="collapse navbar-collapse" id="navbarNav">
-                {location.pathname === "/become-host" || location.pathname === "/complete-profile" ? (
+                {location.pathname === "/become-a-host" ||
+                location.pathname === "/complete-profile" ? (
                   <ul className="navbar-nav mx-auto"></ul>
                 ) : (
                   <ul className="navbar-nav mx-auto">
@@ -97,124 +112,224 @@ const Header = () => {
                   </ul>
                 )}
 
-                <button
-                  className="nav-link fw-semibold me-3"
-                  onClick={()=>setShowHostModal(true)}
-                >
-                  Become a host
-                </button>
-                <div className="dropdown">
-                  <button
-                    className="btn rounded-5 d-flex align-items-center gap-2 w-auto justify-content-center spacebtn"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <svg
-                      fill="#000000"
-                      width="15px"
-                      height="15px"
-                      viewBox="0 0 1024 1024"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M27 193.6c-8.2-8.2-12.2-18.6-12.2-31.2s4-23 12.2-31.2S45.6 119 58.2 119h912.4c12.6 0 23 4 31.2 12.2s12.2 18.6 12.2 31.2-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2zm974.8 285.2c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 522.6 14.8 510s4-23 12.2-31.2 18.6-12.2 31.2-12.2h912.4c12.6 0 23 4 31.2 12.2zm0 347.4c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 870 14.8 857.4s4-23 12.2-31.2S45.6 814 58.2 814h912.4c12.6 0 23 4.2 31.2 12.2z" />
-                    </svg>
+                {isAuthenticated ? (
+                  <button className="nav-link fw-semibold me-3">
+                    Switch to Hosting
                   </button>
-                  <ul className="dropdown-menu submenu">
-                    <li className="py-1">
-                      <a className="dropdown-item" href="#">
-                        <i className="bi bi-question-circle me-1"></i> Help Center
-                      </a>
-                    </li>
-                    <li className="py-1">
-                      <button className="dropdown-item" href="#" onClick={()=> location.pathname === '/become-host' ? setShowLoginModal(false) : setShowLoginModal(true)}>
-                        Login or Signup
-                      </button>
-                    </li>
-                  </ul>
+                ) : (
+                  <button
+                    className="nav-link fw-semibold me-3"
+                    onClick={() => setShowHostModal(true)}
+                  >
+                    Become a host
+                  </button>
+                )}
+
+                {(isAuthenticated) && (
+                   <div className="user-profile-sm me-3">{user.firstName.charAt(0)}</div>
+                )}
+
+                {isAuthenticated ? (
+                  <div className="dropdown position-relative">
+                    <div className="noti-dot"></div>
+                    <button
+                      className="btn rounded-5 d-flex align-items-center gap-2 w-auto justify-content-center spacebtn"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <svg
+                        fill="#000000"
+                        width="15px"
+                        height="15px"
+                        viewBox="0 0 1024 1024"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M27 193.6c-8.2-8.2-12.2-18.6-12.2-31.2s4-23 12.2-31.2S45.6 119 58.2 119h912.4c12.6 0 23 4 31.2 12.2s12.2 18.6 12.2 31.2-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2zm974.8 285.2c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 522.6 14.8 510s4-23 12.2-31.2 18.6-12.2 31.2-12.2h912.4c12.6 0 23 4 31.2 12.2zm0 347.4c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 870 14.8 857.4s4-23 12.2-31.2S45.6 814 58.2 814h912.4c12.6 0 23 4.2 31.2 12.2z" />
+                      </svg>
+                    </button>
+                    <ul className="dropdown-menu submenu">
+                      <li className="py-1">
+                        <a className="dropdown-item" href="#">
+                          <i className="bi bi-heart me-1"></i> Wishlists
+                        </a>
+                      </li>
+                      <li className="py-1">
+                        <a className="dropdown-item" href="#">
+                          <i className="bi bi-chat-left-dots me-1"></i> Messages
+                        </a>
+                      </li>
+                      <li className="py-1">
+                        <a className="dropdown-item" href="#">
+                          <i class="bi bi-person me-1"></i> Profile
+                        </a>
+                      </li>
+
+                       <li className="py-1">
+                        <a className="dropdown-item" href="#">
+                          <i className="bi bi-question-circle  me-1"></i> Help
+                          Center
+                        </a>
+                      </li>
+
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
+
+                      <li className="py-1">
+                        <a className="dropdown-item" href="#">
+                          Become
+                          a host
+                        </a>
+                      </li>
+
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
+
+                     
+                      <li className="py-1">
+                        <a className="dropdown-item" href="#">
+                           Refer a host
+                        </a>
+                      </li>
+                      <li className="py-1" onClick={handleLogout}>
+                        <a className="dropdown-item" href="#">
+                         Logout
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                ) : (
+                  <div className="dropdown">
+                    <button
+                      className="btn rounded-5 d-flex align-items-center gap-2 w-auto justify-content-center spacebtn"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <svg
+                        fill="#000000"
+                        width="15px"
+                        height="15px"
+                        viewBox="0 0 1024 1024"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M27 193.6c-8.2-8.2-12.2-18.6-12.2-31.2s4-23 12.2-31.2S45.6 119 58.2 119h912.4c12.6 0 23 4 31.2 12.2s12.2 18.6 12.2 31.2-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2zm974.8 285.2c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 522.6 14.8 510s4-23 12.2-31.2 18.6-12.2 31.2-12.2h912.4c12.6 0 23 4 31.2 12.2zm0 347.4c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 870 14.8 857.4s4-23 12.2-31.2S45.6 814 58.2 814h912.4c12.6 0 23 4.2 31.2 12.2z" />
+                      </svg>
+                    </button>
+                    <ul className="dropdown-menu submenu">
+                      <li className="py-1">
+                        <a className="dropdown-item" href="#">
+                          <i className="bi bi-question-circle me-1"></i> Help
+                          Center
+                        </a>
+                      </li>
+                      <li className="py-1">
+                        <button
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() =>
+                            location.pathname === "/become-a-host"
+                              ? setShowLoginModal(false)
+                              : setShowLoginModal(true)
+                          }
+                        >
+                          Login or Signup
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {location.pathname === "/become-a-host" ||
+        location.pathname === "/complete-profile" ? (
+          ""
+        ) : (
+          <div className="groupsearch my-3">
+            <div className="container-fluid">
+              <div className="row d-flex justify-content-center">
+                <div className="col-7">
+                  <Searchbar />
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-
-        {location.pathname === "/become-host" || location.pathname === "/complete-profile" ? "" :   <div className="groupsearch my-3">
-          <div className="container-fluid">
-            <div className="row d-flex justify-content-center">
-              <div className="col-7">
-                <Searchbar />
-              </div>
-            </div>
-          </div>
-        </div>}
-      
-
-
+        )}
       </div>
 
-     {showHostModal && <div className="modal modal-lg fade show d-block fade-down">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content rounded-5">
-            <div className="modal-header p-5 text-center border-0">
-              <h3 className="modal-title text-center">
-                What Would You Like to Host?
-              </h3>
-              <button
-                type="button"
-                className="btn-close"
-                 onClick={CloseModal}
-              ></button>
-            </div>
-            <div className="modal-body p-5">
-              <div className="row">
-                {PropertyType.map((property) => (
-                  <div className="col-lg-4" key={property.id}>
-                    <div
-                      className={`card rounded-4 ${
-                        selectedTypeId === property.id ? "border-tight" : ""
-                      }`}
-                      onClick={() => handleSelect(property.id)}
-                    >
-                      <div className="card-body d-flex flex-column align-items-center justify-content-center">
-                        <img
-                          src={property.icon}
-                          className="img-fluid"
-                          width={60}
-                          alt=""
-                        />
+      {showHostModal && (
+        <div className="modal modal-lg fade show d-block fade-down">
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content rounded-5">
+              <div className="modal-header p-5 text-center border-0">
+                <h3 className="modal-title text-center">
+                  What Would You Like to Host?
+                </h3>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={CloseModal}
+                ></button>
+              </div>
+              <div className="modal-body p-5">
+                <div className="row">
+                  {PropertyType.map((property) => (
+                    <div className="col-lg-4" key={property.id}>
+                      <div
+                        className={`card rounded-4 ${
+                          selectedTypeId === property.id ? "border-tight" : ""
+                        }`}
+                        onClick={() => handleSelect(property.id)}
+                      >
+                        <div className="card-body d-flex flex-column align-items-center justify-content-center">
+                          <img
+                            src={property.icon}
+                            className="img-fluid"
+                            width={60}
+                            alt=""
+                          />
 
-                        <div className="property-text">
-                          <h6 className="card-title mt-3">{property.name}</h6>
+                          <div className="property-text">
+                            <h6 className="card-title mt-3">{property.name}</h6>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-dark nexttbtn px-4 py-2"
-                disabled={!selectedTypeId}
-                onClick={() => {
-                  console.log("selected Property Type id", selectedTypeId);
-                 setShowHostModal(false);
-                  navigate('/become-host');
-                }}
-              >
-                Next
-              </button>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-dark nexttbtn px-4 py-2"
+                  disabled={!selectedTypeId}
+                  onClick={() => {
+                    console.log("selected Property Type id", selectedTypeId);
+                    setShowHostModal(false);
+                    navigate("/become-a-host");
+                  }}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>}
-
+      )}
 
       {Backdrop}
 
-      {showLoginModal && <LoginUserModal onModalClose={CloseLoginModal} BackdropLogin={BackdropLogin}/>}
+      {showLoginModal && (
+        <LoginUserModal
+          onModalClose={CloseLoginModal}
+          BackdropLogin={BackdropLogin}
+        />
+      )}
     </>
   );
 };

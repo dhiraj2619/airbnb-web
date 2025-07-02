@@ -6,16 +6,19 @@ import Beatloader from "react-spinners/BeatLoader";
 import { Link, useNavigate } from "react-router-dom";
 import GoogleLoginButton from "../UI/GoogleLoginButton";
 
-const AuthForm = ({ onStateChange, stageFromParent, role = "user" }) => {
+const AuthForm = ({closeOnAuthAction, onStateChange, stageFromParent, role = "user" }) => {
   const {
+    user,
     userExists,
     loading,
     existingUser,
+    isAuthenticated,
     error: reduxError,
   } = useSelector((state) => state.users);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -68,6 +71,13 @@ const AuthForm = ({ onStateChange, stageFromParent, role = "user" }) => {
       setError("");
     }
   }, [stageFromParent]);
+
+
+  useEffect(()=>{
+     if(isAuthenticated && closeOnAuthAction){
+        closeOnAuthAction();
+     }
+  },[isAuthenticated,closeOnAuthAction])
 
   useEffect(() => {
     if (reduxError) setError(reduxError);
@@ -145,7 +155,12 @@ const AuthForm = ({ onStateChange, stageFromParent, role = "user" }) => {
     );
 
     if (res) {
-      navigate("/");
+      if (user?.role === "host") {
+        navigate("/hosting");
+        
+      } else if (user?.role === "user") {
+        navigate("/");
+      }
     }
   };
 
@@ -264,15 +279,20 @@ const AuthForm = ({ onStateChange, stageFromParent, role = "user" }) => {
           {existingUser?.googleId ? (
             <>
               <div className="my-3 d-flex justify-content-center">
-                   <div className="user-profile d-flex justify-content-center align-items-center">
-                       <h3 className="fs-1 text-white">{existingUser.firstName.charAt(0)}</h3>
-                   </div>
+                <div className="user-profile d-flex justify-content-center align-items-center">
+                  <h3 className="fs-1 text-white">
+                    {existingUser.firstName.charAt(0)}
+                  </h3>
+                </div>
               </div>
-              <GoogleLoginButton/>
+              <GoogleLoginButton />
 
               <div className="mt-3 d-flex flex-row justify-content-start align-items-center">
-                 <span className="text-dark fs-normal fw-normal">Not You? </span>
-                <Link className="btn btn-link text-dark fs-normal fw-bold" onClick={()=>setStage("check")}>
+                <span className="text-dark fs-normal fw-normal">Not You? </span>
+                <Link
+                  className="btn btn-link text-dark fs-normal fw-bold"
+                  onClick={() => setStage("check")}
+                >
                   Use Another Account
                 </Link>
               </div>
