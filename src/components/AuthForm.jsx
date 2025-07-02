@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./css/input.css";
 import { useDispatch, useSelector } from "react-redux";
-import { checkUserExists, RegisterUser } from "../redux/actions/UserAction";
+import {
+  checkUserExists,
+  LoginWithEmail,
+  RegisterUser,
+} from "../redux/actions/UserAction";
 import Beatloader from "react-spinners/BeatLoader";
 import { Link, useNavigate } from "react-router-dom";
 import GoogleLoginButton from "../UI/GoogleLoginButton";
 
-const AuthForm = ({closeOnAuthAction, onStateChange, stageFromParent, role = "user" }) => {
+const AuthForm = ({
+  closeOnAuthAction,
+  onStateChange,
+  stageFromParent,
+  role = "user",
+}) => {
   const {
     user,
     userExists,
@@ -18,7 +27,6 @@ const AuthForm = ({closeOnAuthAction, onStateChange, stageFromParent, role = "us
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -72,12 +80,11 @@ const AuthForm = ({closeOnAuthAction, onStateChange, stageFromParent, role = "us
     }
   }, [stageFromParent]);
 
-
-  useEffect(()=>{
-     if(isAuthenticated && closeOnAuthAction){
-        closeOnAuthAction();
-     }
-  },[isAuthenticated,closeOnAuthAction])
+  useEffect(() => {
+    if (isAuthenticated && closeOnAuthAction) {
+      closeOnAuthAction();
+    }
+  }, [isAuthenticated, closeOnAuthAction]);
 
   useEffect(() => {
     if (reduxError) setError(reduxError);
@@ -157,13 +164,26 @@ const AuthForm = ({closeOnAuthAction, onStateChange, stageFromParent, role = "us
     if (res) {
       if (user?.role === "host") {
         navigate("/hosting");
-        
       } else if (user?.role === "user") {
         navigate("/");
       }
     }
   };
+  const handleLogin = async () => {
+    clearError();
 
+    if (!email.trim()) return setError("Email is required");
+    if (!password.trim()) return setError("Password is required");
+
+    const loginRes = await dispatch(LoginWithEmail(email, password));
+
+    if (loginRes?.success) {
+      closeOnAuthAction();
+
+      if (loginRes.user.role === "host") navigate("/hosting");
+      else navigate("/");
+    }
+  };
   const ErrorCard = () => {
     if (!error) return null;
 
@@ -316,7 +336,13 @@ const AuthForm = ({closeOnAuthAction, onStateChange, stageFromParent, role = "us
                 <label for="floatingInput">Password</label>
               </div>
               <ErrorCard />
-              <button className="btn submitbtn w-100">Login</button>
+              <button
+                className="btn submitbtn w-100"
+                disabled={loading}
+                onClick={handleLogin}
+              >
+                Login
+              </button>
               <div className="mt-3 d-flex flex-column justify-content-start align-items-start">
                 <Link className="btn btn-link text-dark fs-normal fw-normal px-0 py-2">
                   Forgotten your password?

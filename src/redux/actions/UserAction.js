@@ -6,6 +6,8 @@ import {
   GOOGLE_LOGIN_FAIL,
   GOOGLE_LOGIN_REQUEST,
   GOOGLE_LOGIN_SUCCESS,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
   LOGOUT_USER,
   REGISTER_USER_FAIL,
   REGISTER_USER_REQUEST,
@@ -67,7 +69,7 @@ export const RegisterUser =
       });
       console.log("[REGISTER_USER] server responded:", data);
 
-      localStorage.setItem("token",data.token);
+      localStorage.setItem("token", data.token);
 
       if (data.success) {
         dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user });
@@ -88,6 +90,35 @@ export const RegisterUser =
       });
     }
   };
+
+export const LoginWithEmail = (email, password) => async (dispatch) => {
+  try {
+    dispatch({ type: LOGIN_REQUEST });
+
+    const { data } = await axios.post(`${ServerApi}/user/login`, {
+      email,
+      password,
+    });
+
+    localStorage.setItem("token", data.token);
+
+    dispatch({ type: LOGIN_SUCCESS, payload: data.user });
+
+    return {
+      success: true,
+      user: data.user,
+      token: data.token,
+    };
+  } catch (error) {
+     const errorMessage =
+        error.response?.data?.message || "Login issue - Internal server";
+
+      dispatch({
+        type: REGISTER_USER_FAIL,
+        payload: errorMessage,
+      });
+  }
+};
 
 export const googleLogin = (accessToken) => async (dispatch) => {
   try {
@@ -117,17 +148,14 @@ export const googleLogin = (accessToken) => async (dispatch) => {
   }
 };
 
-
-export const LogoutUser=()=>async(dispatch)=>{
+export const LogoutUser = () => async (dispatch) => {
   try {
-    
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      
-     dispatch({type:LOGOUT_USER});
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    dispatch({ type: LOGOUT_USER });
   } catch (error) {
-      console.error("log out failed");
-      
+    console.error("log out failed");
   }
-}
+};

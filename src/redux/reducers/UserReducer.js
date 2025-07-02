@@ -5,6 +5,9 @@ import {
   GOOGLE_LOGIN_FAIL,
   GOOGLE_LOGIN_REQUEST,
   GOOGLE_LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
   LOGOUT_USER,
   REGISTER_USER_FAIL,
   REGISTER_USER_REQUEST,
@@ -24,6 +27,7 @@ export const UserReducer = (state = intialState, action) => {
   switch (action.type) {
     case CHECK_USER_REQUEST:
     case REGISTER_USER_REQUEST:
+    case LOGIN_REQUEST:
       return {
         ...state,
         loading: true,
@@ -48,6 +52,7 @@ export const UserReducer = (state = intialState, action) => {
         existingUser: action.payload.user,
       };
     case REGISTER_USER_SUCCESS:
+    case LOGIN_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -70,6 +75,7 @@ export const UserReducer = (state = intialState, action) => {
       };
 
     case REGISTER_USER_FAIL:
+    case LOGIN_FAIL:
       return {
         ...state,
         loading: false,
