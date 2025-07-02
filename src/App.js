@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import { Route, Routes } from "react-router-dom";
 import LoginHost from "./components/LoginHost";
 import ProfileCompletion from "./components/ProfileCompletion";
+import HostListings from "./pages/HostListings";
 
 const App = () => {
   return (
@@ -13,7 +14,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/become-a-host" element={<LoginHost/>} />
-      
+        <Route path="/hosting" element={<HostListings/>} />
+
+
         <Route path="/complete-profile" element={<ProfileCompletion/>} />
       </Routes>
     </>

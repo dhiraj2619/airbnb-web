@@ -178,7 +178,9 @@ const AuthForm = ({
     const loginRes = await dispatch(LoginWithEmail(email, password));
 
     if (loginRes?.success) {
-      closeOnAuthAction();
+      if (isAuthenticated && closeOnAuthAction) {
+        closeOnAuthAction();
+      }
 
       if (loginRes.user.role === "host") navigate("/hosting");
       else navigate("/");
