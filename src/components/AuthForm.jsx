@@ -14,8 +14,11 @@ const AuthForm = ({
   closeOnAuthAction,
   onStateChange,
   stageFromParent,
+  hostFlow,
   role = "user",
 }) => {
+  
+  
   const {
     user,
     userExists,
@@ -161,12 +164,10 @@ const AuthForm = ({
       })
     );
 
-    if (res) {
-      if (user?.role === "host") {
-        navigate("/hosting");
-      } else if (user?.role === "user") {
-        navigate("/");
-      }
+    if (res?.success) {
+      // ← make sure the call succeeded
+      if (closeOnAuthAction) closeOnAuthAction();
+      navigate(hostFlow ? "/hosting/overview" : "/");
     }
   };
   const handleLogin = async () => {
@@ -178,12 +179,12 @@ const AuthForm = ({
     const loginRes = await dispatch(LoginWithEmail(email, password));
 
     if (loginRes?.success) {
+      console.log("role of login res", loginRes);
       if (isAuthenticated && closeOnAuthAction) {
         closeOnAuthAction();
       }
 
-      if (loginRes.user.role === "host") navigate("/hosting");
-      else navigate("/");
+       navigate(hostFlow ? "/hosting/overview" : "/");
     }
   };
   const ErrorCard = () => {
@@ -254,6 +255,8 @@ const AuthForm = ({
             </div>
 
             <GoogleLoginButton
+            hostFlow={hostFlow}
+              role={role}
               onIncompleteProfile={(user) => {
                 setStage("signup");
                 setSignupData({
@@ -307,7 +310,7 @@ const AuthForm = ({
                   </h3>
                 </div>
               </div>
-              <GoogleLoginButton />
+              <GoogleLoginButton role={role} hostFlow={hostFlow}/>
 
               <div className="mt-3 d-flex flex-row justify-content-start align-items-center">
                 <span className="text-dark fs-normal fw-normal">Not You? </span>

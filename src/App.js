@@ -5,6 +5,8 @@ import { Route, Routes } from "react-router-dom";
 import LoginHost from "./components/LoginHost";
 import ProfileCompletion from "./components/ProfileCompletion";
 import HostListings from "./pages/HostListings";
+import { RequireGuest } from "./Routes/ProtectedRoute";
+import HostingOverview from "./pages/HostingOverview";
 
 const App = () => {
   return (
@@ -13,11 +15,13 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/become-a-host" element={<LoginHost/>} />
-        <Route path="/hosting" element={<HostListings/>} />
+        <Route element={<RequireGuest />}>
+          <Route path="/become-a-host" element={<LoginHost />} />
+        </Route>
+        <Route path="/hosting" element={<HostListings />} />
+        <Route path="/hosting/overview" element={<HostingOverview />} />
 
-
-        <Route path="/complete-profile" element={<ProfileCompletion/>} />
+        <Route path="/complete-profile" element={<ProfileCompletion />} />
       </Routes>
     </>
   );

@@ -6,29 +6,30 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { googleLogin } from "../redux/actions/UserAction";
 
-const GoogleLoginButton = () => {
+const GoogleLoginButton = ({role="user",hostFlow}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-    const login= useGoogleLogin({
-        onSuccess:async(tokenResponse)=>{
-            try {
-               const user =  await dispatch(googleLogin(tokenResponse.access_token));
+  const login = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const user = await dispatch(googleLogin(tokenResponse.access_token,role));
 
-               if(!user) return;
+       
 
-               const {dateofbirth,mobile} = user;
-                if(!dateofbirth || !mobile) {
-                    navigate("/complete-profile");
-                } else {
-                    navigate("/");
-                }
-                               
-            } catch (error) {
-                console.error("Error logging in with Google", error);
-            }
+        if (!user) return;
+
+        const { dateofbirth, mobile } = user;
+        if (!dateofbirth || !mobile) {
+          navigate("/complete-profile");
+        } else {
+         navigate(hostFlow ? "/hosting/overview" : "/");
         }
-    })
+      } catch (error) {
+        console.error("Error logging in with Google", error);
+      }
+    },
+  });
   return (
     <>
       {" "}

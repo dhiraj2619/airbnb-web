@@ -120,12 +120,13 @@ export const LoginWithEmail = (email, password) => async (dispatch) => {
   }
 };
 
-export const googleLogin = (accessToken) => async (dispatch) => {
+export const googleLogin = (accessToken,role ) => async (dispatch) => {
   try {
     dispatch({ type: GOOGLE_LOGIN_REQUEST });
 
     const { data } = await axios.post(`${ServerApi}/user/google-login`, {
       token: accessToken,
+      role
     });
 
     const { token, user } = data;

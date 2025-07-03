@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AuthForm from "./AuthForm";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 const LoginHost = () => {
   const [formStage, setFormStage] = useState("check");
@@ -8,6 +9,10 @@ const LoginHost = () => {
    const {
     existingUser
   } = useSelector((state) => state.users);
+
+  const location = useLocation();
+
+  const hostFlow = location.pathname === "/become-a-host"
 
   const getTitle = () => {
     switch (formStage) {
@@ -43,7 +48,7 @@ const LoginHost = () => {
               <h6 className="card-title mb-0">{getTitle()}</h6>
             </div>
             <div className="card-body">
-              <AuthForm stageFromParent={formStage} onStateChange={setFormStage} role="host"/>
+              <AuthForm hostFlow={hostFlow} stageFromParent={formStage} onStateChange={setFormStage} role="host"/>
             </div>
           </div>
         </div>
