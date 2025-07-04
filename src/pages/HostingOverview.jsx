@@ -1,8 +1,10 @@
 import React from "react";
+import './css/hostingviews.css';
+
 
 const HostingOverview = () => {
   return (
-    <section className="" style={{ height: "500px" }}>
+    <section className="" style={{ height: "550px" }}>
       <div className="container-fluid h-100">
         <div className="row align-items-center h-100">
           <div className="col-lg-6">
@@ -73,6 +75,11 @@ const HostingOverview = () => {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="progress-line-straight">
+        <div className="progress-line text-end me-5">
+            <button className="btn submitbtn px-4">Get Started</button>
         </div>
       </div>
     </section>
