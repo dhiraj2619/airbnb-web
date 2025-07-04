@@ -113,7 +113,7 @@ const Header = () => {
                 )}
 
                 {isAuthenticated ? (
-                  <button className="nav-link fw-semibold me-3">
+                  <button className="nav-link fw-semibold me-3" onClick={()=>navigate('/hosting')}>
                     Switch to Hosting
                   </button>
                 ) : (
