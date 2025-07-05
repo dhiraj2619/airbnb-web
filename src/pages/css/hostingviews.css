@@ -2,5 +2,18 @@
     border-top: 6px solid rgb(221, 221, 221) !important;
 }
 .progress-line{
-    padding-top: 30px;
+    padding: 20px 0; 
+}
+.btn.getStarted{
+   background: linear-gradient(to right,#E61E4D 0%,#E31C5F 50%,#D70466 100%);;
+   color: #fff;
+   font-size: 16px;
+   font-weight: 600;
+   padding: 10px 13px;
+   width: 170px;
+}
+.getStarted:disabled{
+    background: #ccc !important;
+    cursor: not-allowed;
+    opacity: 1;
 }

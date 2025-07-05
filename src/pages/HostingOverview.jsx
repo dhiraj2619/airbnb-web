@@ -1,10 +1,41 @@
-import React from "react";
-import './css/hostingviews.css';
-
+import React, { useState } from "react";
+import "./css/hostingviews.css";
+import axios from "axios";
+import { ServerApi } from "../config/ServerApi";
+import { useNavigate } from "react-router-dom";
+import { BeatLoader } from "react-spinners";
 
 const HostingOverview = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const handleGetStarted = async () => {
+    const token =
+      localStorage.getItem("token") || localStorage.getItem("authToken");
+
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${ServerApi}/property/add`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const propertyId = data.property._id;
+
+      navigate(`/hosting/${propertyId}/about-your-place`);
+    } catch (error) {
+      console.error("Failed to create property:", error);
+    }finally{
+      setLoading(false);
+    }
+  };
   return (
-    <section className="" style={{ height: "550px" }}>
+    <section className="" style={{ height: "530px" }}>
       <div className="container-fluid h-100">
         <div className="row align-items-center h-100">
           <div className="col-lg-6">
@@ -79,7 +110,9 @@ const HostingOverview = () => {
       </div>
       <div className="progress-line-straight">
         <div className="progress-line text-end me-5">
-            <button className="btn submitbtn px-4">Get Started</button>
+          <button className="btn getStarted px-4" disabled={loading} onClick={handleGetStarted}>
+            {loading ? <BeatLoader color="#010101" size={10} /> : 'Get Started'}  
+          </button>
         </div>
       </div>
     </section>
