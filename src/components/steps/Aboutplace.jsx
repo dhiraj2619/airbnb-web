@@ -1,8 +1,11 @@
 import React from "react";
 import HostingSteps from "../HostingSteps";
 import '../../pages/css/hostingviews.css';
+import { useNavigate } from "react-router-dom";
 
 const Aboutplace = ({ onNext }) => {
+  const navigate = useNavigate();
+
   return (
     <section className="" style={{ height: "540px" }}>
       <div className="container-fluid h-100">
@@ -41,7 +44,7 @@ const Aboutplace = ({ onNext }) => {
 
        <HostingSteps currentStep="about-your-place"/>
       <div className="d-flex justify-content-between px-4 pt-4">
-        <button className="btn text-dark fs-xlg btn-link px-5 py-2" onClick={onNext}>
+        <button className="btn text-dark fs-xlg btn-link px-5 py-2" onClick={()=>navigate('/hosting/overview')}>
           Back
         </button>
         <button className="btn btn-dark fs-xlg px-5 py-2" onClick={onNext}>
