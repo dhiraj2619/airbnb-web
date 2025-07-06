@@ -14,7 +14,7 @@ const App = () => {
 
   const location = useLocation();
 
-  const isHostRoutes = location.pathname === "/hosting/overview" || matchPath("/hosting/:propertyId/:step", location.pathname);
+  const isHostRoutes = location.pathname ==="/hosting" || location.pathname === "/hosting/overview" || matchPath("/hosting/:propertyId/:step", location.pathname);
   return (
     <>
      {isHostRoutes ? <HostHeader/>  : <Header />}

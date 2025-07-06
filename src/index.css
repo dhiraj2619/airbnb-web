@@ -231,6 +231,9 @@ body {
 .fs-lg{
   font-size: 15px;
 }
+.fs-xlg{
+  font-size: 17px;
+}
 .lives {
   padding: 22px 0;
   border-bottom: 0.5px solid #c9c6c6;

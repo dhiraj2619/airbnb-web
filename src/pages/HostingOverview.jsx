@@ -35,7 +35,7 @@ const HostingOverview = () => {
     }
   };
   return (
-    <section className="" style={{ height: "530px" }}>
+    <section className="" style={{ height: "540px" }}>
       <div className="container-fluid h-100">
         <div className="row align-items-center h-100">
           <div className="col-lg-6">

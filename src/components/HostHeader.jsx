@@ -25,9 +25,9 @@ const HostHeader = () => {
               </svg>
             </Link>
 
-
-
-            <button className="btn btn-sm px-4 py-2 btn-outline-secondary rounded-pill">Exit</button>
+            <button className="btn btn-sm px-4 py-2 btn-outline-secondary rounded-pill">
+              Exit
+            </button>
           </div>
         </div>
       </div>
