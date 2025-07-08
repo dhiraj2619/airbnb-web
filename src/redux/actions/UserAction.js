@@ -154,6 +154,7 @@ export const LogoutUser = () => async (dispatch) => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("pendingPropertyTypeId");
 
     dispatch({ type: LOGOUT_USER });
   } catch (error) {

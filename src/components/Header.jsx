@@ -4,20 +4,18 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import LoginUserModal from "./LoginUserModal";
 import { useDispatch, useSelector } from "react-redux";
 import { LogoutUser } from "../redux/actions/UserAction";
+import { fetchAllPropertyTypes } from "../redux/actions/PropertyTypeAction";
 
 const Header = () => {
   const {user, isAuthenticated } = useSelector((state) => state.users);
+  const {propertyTypes} = useSelector((state)=>state.propertyTypes);
   const dispatch = useDispatch();
 
-  const PropertyType = [
-    { id: 1, name: "Home", icon: require("../assets/img/home.png") },
-    { id: 2, name: "Hotel", icon: require("../assets/img/hotel.png") },
-    {
-      id: 3,
-      name: "Special Attraction",
-      icon: require("../assets/img/resort.png"),
-    },
-  ];
+  useEffect(()=>{
+     dispatch(fetchAllPropertyTypes());
+  },[dispatch])
+
+  
   const [selectedTypeId, setSelectedTypeId] = useState(null);
   const [showHostModal, setShowHostModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -278,17 +276,17 @@ const Header = () => {
               </div>
               <div className="modal-body p-5">
                 <div className="row">
-                  {PropertyType.map((property) => (
-                    <div className="col-lg-4" key={property.id}>
+                  {propertyTypes.map((property) => (
+                    <div className="col-lg-4" key={property._id}>
                       <div
                         className={`card rounded-4 ${
-                          selectedTypeId === property.id ? "border-tight" : ""
+                          selectedTypeId === property._id ? "border-tight" : ""
                         }`}
-                        onClick={() => handleSelect(property.id)}
+                        onClick={() => handleSelect(property._id)}
                       >
                         <div className="card-body d-flex flex-column align-items-center justify-content-center">
                           <img
-                            src={property.icon}
+                            src={property.thumbnail?.url}
                             className="img-fluid"
                             width={60}
                             alt=""
@@ -312,6 +310,7 @@ const Header = () => {
                     console.log("selected Property Type id", selectedTypeId);
                     setShowHostModal(false);
                     navigate("/become-a-host");
+                    localStorage.setItem("pendingPropertyTypeId", selectedTypeId);
                   }}
                 >
                   Next

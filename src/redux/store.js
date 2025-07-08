@@ -10,6 +10,7 @@ import { thunk } from "redux-thunk";
 import { composeWithDevTools } from "@redux-devtools/extension";
 import { propertyReducer } from "./reducers/PropertyReducer";
 import { UserReducer } from "./reducers/UserReducer";
+import { PrivacyOptionsReducer, PropertyTypeReducer } from "./reducers/PropertyTypeReducer";
 
 const persistConfig = {
   key: "root",
@@ -20,6 +21,8 @@ const rootReducer = combineReducers({
   categories: CategoryReducer,
   properties: propertyReducer,
   users: UserReducer,
+  propertyTypes:PropertyTypeReducer,
+  privacyOptions:PrivacyOptionsReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

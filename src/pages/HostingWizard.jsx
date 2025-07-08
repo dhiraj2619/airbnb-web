@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Aboutplace from "../components/steps/Aboutplace";
 import PropertyType from "../components/steps/PropertyType";
-
+import PrivacyType from "../components/steps/PrivacyType";
 
 const HostingWizard = () => {
   const stepsOrder = [
@@ -28,29 +28,39 @@ const HostingWizard = () => {
       const nextStep = stepsOrder[currentStepIndex + 1];
       navigate(`/hosting/${propertyId}/${nextStep}`);
     } else {
-      // Handle case when there are no more steps
       console.log("No more steps to navigate to.");
     }
   };
 
+  const goToPreviousStep = () => {
+    if (currentStepIndex > 0) {
+      const previousStep = stepsOrder[currentStepIndex - 1];
+      navigate(`/hosting/${propertyId}/${previousStep}`);
+    } else {
+      console.log("Already at the first step.");
+    }
+  };
   const renderStepComponent = () => {
     switch (step) {
       case "about-your-place":
         return <Aboutplace onNext={goToNextStep} />;
 
       case "property-type":
-        return <PropertyType onNext={goToNextStep} />;
+        return <PropertyType onNext={goToNextStep} onBack={goToPreviousStep} />;
+
+      case "privacy-type":
+        return <PrivacyType onNext={goToNextStep} onBack={goToPreviousStep} />;
 
       default:
         return <div>Step not found</div>;
     }
   };
 
-  return <div>
-      <div className="mt-4">
-           {renderStepComponent()}
-      </div>
-  </div>;
+  return (
+    <div>
+      <div className="mt-4">{renderStepComponent()}</div>
+    </div>
+  );
 };
 
 export default HostingWizard;

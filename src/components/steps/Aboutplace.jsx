@@ -7,7 +7,7 @@ const Aboutplace = ({ onNext }) => {
   const navigate = useNavigate();
 
   return (
-    <section className="" style={{ height: "540px" }}>
+    <section className="" style={{ height: "520px" }}>
       <div className="container-fluid h-100">
         <div className="row align-items-center h-100">
           <div className="col-lg-6">
