@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HostingSteps from "../HostingSteps";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPrivacyOptions } from "../../redux/actions/PropertyTypeAction";
 
 const PrivacyType = ({ onBack, onNext }) => {
+  const { privacyOptions } = useSelector((state) => state.privacyOptions);
+  const dispatch = useDispatch();
+
+  const [privacyOptionsId, setPrivacyOptionsId] = useState(null);
+
+  useEffect(() => {
+    const propertyTypeId = localStorage.getItem("pendingPropertyTypeId");
+
+    if(propertyTypeId) {
+      dispatch(fetchPrivacyOptions(propertyTypeId));
+    }
+  }, [dispatch]);
+
   return (
     <section className="" style={{ height: "520px" }}>
       <div className="container-fluid h-100">
@@ -10,20 +25,28 @@ const PrivacyType = ({ onBack, onNext }) => {
             What type of place will guests have?
           </span>
           <div className="col-lg-5">
-            <div className="row">
-              <div className="card">
-                <div className="card-body d-flex flex-row align-items-center justify-content-between">
-                  <div className="flex-column">
-                    <h4 className="text-dark fs-4">Hello</h4>
-                    <span className="fs-6 text-secondary fw-normal">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Accusantium odit adipisci ullam sed, libero officiis qui
-                      eos quaerat tenetur, vitae consequatur magni sit nisi
-                      similique cumque inventore recusandae? Suscipit, rem.
-                    </span>
+            <div className="row gy-3">
+              {privacyOptions.map((option) => (
+                <div className="col-lg-12" key={option._id}>
+                  <div className="card rounded-4" style={{height: "120px"}}>
+                    <div className="card-body d-flex flex-row align-items-center justify-content-between gap-5">
+                      <div className="flex-column">
+                        <h4 className="text-dark fs-5">{option.name}</h4>
+                        <span className="fs-small text-secondary fw-normal">
+                          {option.description}
+                        </span>
+                      </div>
+
+                      <img
+                        src={option.thumbnail?.url}
+                        className="img-fluid"
+                        width="45px"
+                        alt=""
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

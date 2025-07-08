@@ -39,10 +39,12 @@ export const fetchPrivacyOptions=(propertyTypeId)=>async(dispatch)=>{
 
       const {data} = await axios.get(`${ServerApi}/property/privacyoptions/${propertyTypeId}`);
 
+      console.log("privacy options data getting here", data);
+      
       dispatch({type:FETCH_PROPERTY_OPTIONS_SUCCESS,payload:data.options});
       
    } catch (error) {
-       console.error("Error fetching property type:", error);
+       console.error("Error fetching property option:", error);
     dispatch({
       type: FETCH_PROPERTY_OPTIONS_FAILURE,
       payload:
