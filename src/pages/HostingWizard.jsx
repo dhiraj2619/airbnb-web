@@ -41,15 +41,20 @@ const HostingWizard = () => {
     }
   };
   const renderStepComponent = () => {
+    const stepProps = {
+      onNext: goToNextStep,
+      onBack: goToPreviousStep,
+      currentStep: step,
+    };
     switch (step) {
       case "about-your-place":
-        return <Aboutplace onNext={goToNextStep} />;
+        return <Aboutplace {...stepProps} />;
 
       case "property-type":
-        return <PropertyType onNext={goToNextStep} onBack={goToPreviousStep} />;
+        return <PropertyType {...stepProps} />;
 
       case "privacy-type":
-        return <PrivacyType onNext={goToNextStep} onBack={goToPreviousStep} />;
+        return <PrivacyType {...stepProps} />;
 
       default:
         return <div>Step not found</div>;

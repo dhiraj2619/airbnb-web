@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllPropertyTypes } from "../../redux/actions/PropertyTypeAction";
 
-const PropertyType = ({ onNext,onBack}) => {
+const PropertyType = ({ onNext,onBack,currentStep}) => {
   const { propertyTypes } = useSelector((state) => state.propertyTypes);
   const [selectedTypeId, setSelectedTypeId] = useState(null);
   const dispatch = useDispatch();
@@ -62,15 +62,15 @@ const PropertyType = ({ onNext,onBack}) => {
         </div>
       </div>
 
-      <HostingSteps currentStep="about-your-place" />
-      <div className="d-flex justify-content-between px-4 pt-4">
+      <HostingSteps currentStep={currentStep} />
+      <div className="d-flex justify-content-between pt-3 px-4 ">
         <button
           className="btn text-dark fs-xlg btn-link px-5 py-2"
           onClick={onBack}
         >
           Back
         </button>
-        <button className="btn btn-dark fs-xlg px-5 py-2" disabled={!selectedTypeId} onClick={()=>{
+        <button className="btn btn-dark fs-xlg px-4 py-2" disabled={!selectedTypeId} onClick={()=>{
            if(selectedTypeId){
              localStorage.setItem("pendingPropertyTypeId",selectedTypeId);
              onNext();

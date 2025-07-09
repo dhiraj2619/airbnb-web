@@ -17,8 +17,6 @@ const AuthForm = ({
   hostFlow,
   role = "user",
 }) => {
-  
-  
   const {
     user,
     userExists,
@@ -184,7 +182,7 @@ const AuthForm = ({
         closeOnAuthAction();
       }
 
-       navigate(hostFlow ? "/hosting/overview" : "/");
+      navigate(hostFlow ? "/hosting/overview" : "/");
     }
   };
   const ErrorCard = () => {
@@ -255,7 +253,7 @@ const AuthForm = ({
             </div>
 
             <GoogleLoginButton
-            hostFlow={hostFlow}
+              hostFlow={hostFlow}
               role={role}
               onIncompleteProfile={(user) => {
                 setStage("signup");
@@ -310,7 +308,7 @@ const AuthForm = ({
                   </h3>
                 </div>
               </div>
-              <GoogleLoginButton role={role} hostFlow={hostFlow}/>
+              <GoogleLoginButton role={role} hostFlow={hostFlow} />
 
               <div className="mt-3 d-flex flex-row justify-content-start align-items-center">
                 <span className="text-dark fs-normal fw-normal">Not You? </span>

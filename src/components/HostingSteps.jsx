@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const steps = [
   "about-your-place",
@@ -12,28 +12,38 @@ const steps = [
   "publish",
 ];
 
-const stepLabels = {
-  "about-your-place": "Place",
-  structure: "Structure",
-  amenities: "Amenities",
-  title: "Title",
-  price: "Price",
-  preview: "Preview",
-};
-
 const HostingSteps = ({ currentStep }) => {
   const currentStepIndex = steps.indexOf(currentStep);
-  const progressPercentage = ((currentStepIndex + 1) / steps.length) * 100;
+  const targetScale = (currentStepIndex + 1) / steps.length;
 
+  const [progressScale, setProgressScale] = useState(targetScale);
+
+  useEffect(() => {
+    if (targetScale !== progressScale) {
+      setProgressScale(targetScale);
+    }
+  }, [targetScale]);
 
   return (
-    <div className="hosting-progress-wrapper">
-      <div className="progress-line-bg">
-        <div
-          className="progress-line-fill"
-          style={{ width: `${progressPercentage}%` }}
-        ></div>
-      </div>
+    <div
+      className="hosting-progress-wrapper"
+      style={{
+        height: "6px",
+        backgroundColor: "#eee",
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+      <div
+        style={{
+          transform: `scaleX(${progressScale})`,
+          transformOrigin: "left",
+          height: "100%",
+          backgroundColor: "#222",
+          width: "100%",
+          transition: "transform 600ms linear",
+        }}
+      ></div>
     </div>
   );
 };
