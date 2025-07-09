@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Aboutplace from "../components/steps/Aboutplace";
 import PropertyType from "../components/steps/PropertyType";
@@ -19,6 +19,20 @@ const HostingWizard = () => {
 
   const { step, propertyId } = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedStep = localStorage.getItem(`listing-progress-${propertyId}`);
+
+    if (!step && savedStep) {
+      navigate(`/hosting/${propertyId}/${savedStep}`);
+    }
+  }, [step, propertyId, navigate]);
+
+  useEffect(() => {
+    if (step) {
+      localStorage.setItem(`listing-progress-${propertyId}`, step);
+    }
+  }, [step, propertyId]);
 
   const currentStepIndex = stepsOrder.indexOf(step);
   console.log(`Current step: ${step}, Index: ${currentStepIndex}`);

@@ -21,13 +21,13 @@ const HostListings = () => {
             </h2>
 
             <div className="listing mt-4">
-              <h4 className="fs-5 fw-semibold">Finish your listing</h4>
+              <h4 className="fs-5 fw-semibold mb-5">Finish your listing</h4>
 
               {properties.map((property) => (
-                <div className="card rounded-4 my-4">
-                  <div className="card-body d-flex align-items-center flex-row">
-                    
-                      {property.name}
+                <div className="card rounded-4 my-4" style={{ cursor: "pointer",height:'90px' }} key={property._id}>
+                  <div className="card-body d-flex align-items-center flex-row gap-4 px-4">
+                       <i className="bi bi-house-fill fs-4"></i>
+                       <h4 className="fs-6 mb-0">Your Property Listing</h4>
                   </div>
                 </div>
               ))}
