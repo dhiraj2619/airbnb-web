@@ -5,25 +5,39 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { googleLogin } from "../redux/actions/UserAction";
+import { fetchHostProperties } from "../redux/actions/PropertyAction";
 
-const GoogleLoginButton = ({role="user",hostFlow}) => {
+const GoogleLoginButton = ({ role = "user", hostFlow }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        const user = await dispatch(googleLogin(tokenResponse.access_token,role));
+        const user = await dispatch(
+          googleLogin(tokenResponse.access_token, role)
+        );
 
-       
-
+     
+      
         if (!user) return;
 
         const { dateofbirth, mobile } = user;
         if (!dateofbirth || !mobile) {
           navigate("/complete-profile");
         } else {
-         navigate(hostFlow ? "/hosting/overview" : "/");
+
+          if(user){
+              const fetchedHostProperties = await dispatch(fetchHostProperties(user._id));
+            
+            
+              if(fetchedHostProperties.length > 0){
+                  navigate("/hosting");
+              }
+              else{
+                navigate(hostFlow ? "/hosting/overview" : "/");
+              }
+          }
         }
       } catch (error) {
         console.error("Error logging in with Google", error);

@@ -9,6 +9,7 @@ import {
 import Beatloader from "react-spinners/BeatLoader";
 import { Link, useNavigate } from "react-router-dom";
 import GoogleLoginButton from "../UI/GoogleLoginButton";
+import { fetchHostProperties } from "../redux/actions/PropertyAction";
 
 const AuthForm = ({
   closeOnAuthAction,
@@ -25,6 +26,7 @@ const AuthForm = ({
     isAuthenticated,
     error: reduxError,
   } = useSelector((state) => state.users);
+  const { properties } = useSelector((state) => state.properties);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -177,11 +179,21 @@ const AuthForm = ({
     const loginRes = await dispatch(LoginWithEmail(email, password));
 
     if (loginRes?.success) {
-      console.log("role of login res", loginRes);
       if (isAuthenticated && closeOnAuthAction) {
         closeOnAuthAction();
       }
 
+      const userId = loginRes.user?._id || loginRes.payload?.user?._id;
+
+      if (userId) {
+        const fetchedProperties = await dispatch(fetchHostProperties(userId));
+
+        console.log("fetched properties of user", fetchedProperties);
+
+        if (fetchedProperties.length > 0) {
+          return navigate("/hosting");
+        }
+      }
       navigate(hostFlow ? "/hosting/overview" : "/");
     }
   };

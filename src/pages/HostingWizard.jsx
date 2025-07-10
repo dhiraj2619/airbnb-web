@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Aboutplace from "../components/steps/Aboutplace";
 import PropertyType from "../components/steps/PropertyType";
 import PrivacyType from "../components/steps/PrivacyType";
+import { useSelector } from "react-redux";
 
 const HostingWizard = () => {
   const stepsOrder = [
@@ -19,20 +20,24 @@ const HostingWizard = () => {
 
   const { step, propertyId } = useParams();
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.users);
 
   useEffect(() => {
-    const savedStep = localStorage.getItem(`listing-progress-${propertyId}`);
-
-    if (!step && savedStep) {
-      navigate(`/hosting/${propertyId}/${savedStep}`);
+    if (!step && user._id) {
+      const savedStep = localStorage.getItem(
+        `listing-progress-${user._id}-${propertyId}`
+      );
+      if (savedStep) {
+        navigate(`/hosting/${propertyId}/${savedStep}`);
+      }
     }
-  }, [step, propertyId, navigate]);
+  }, [step, propertyId, navigate,user?._id]);
 
   useEffect(() => {
-    if (step) {
-      localStorage.setItem(`listing-progress-${propertyId}`, step);
+    if (step && user._id) {
+      localStorage.setItem(`listing-progress-${user._id}-${propertyId}`, step);
     }
-  }, [step, propertyId]);
+  }, [step, propertyId,user?._id]);
 
   const currentStepIndex = stepsOrder.indexOf(step);
   console.log(`Current step: ${step}, Index: ${currentStepIndex}`);

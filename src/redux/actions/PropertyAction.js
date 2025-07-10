@@ -19,6 +19,8 @@ export const fetchHostProperties = (userId) => async (dispatch) => {
       type: FETCH_HOST_PROPERTY_SUCCESS,
       payload: data.hostingProperties,
     });
+
+    return data.hostingProperties;
   } catch (error) {
     dispatch({
       type: FETCH_HOST_PROPERTY_FAILURE,

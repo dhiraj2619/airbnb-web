@@ -156,6 +156,8 @@ export const LogoutUser = () => async (dispatch) => {
     localStorage.removeItem("user");
     localStorage.removeItem("pendingPropertyTypeId");
 
+  
+
     dispatch({ type: LOGOUT_USER });
   } catch (error) {
     console.error("log out failed");

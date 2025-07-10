@@ -33,7 +33,7 @@ const PrivacyType = ({ onBack, onNext ,currentStep}) => {
             <div className="row gy-3">
               {privacyOptions.map((option) => (
                 <div className="col-lg-12" key={option._id}>
-                  <div className={`card rounded-4 ${selectedPrivacyId === option._id ? 'border-tight':''}`} style={{ height: "120px" }} onClick={()=>handleSelect(option._id)}>
+                  <div className={`card rounded-4 ${selectedPrivacyId === option._id ? 'border-tight':''}`} style={{ height: "120px",cursor:'pointer' }} onClick={()=>handleSelect(option._id)}>
                     <div className="card-body d-flex flex-row align-items-center justify-content-between gap-5">
                       <div className="flex-column">
                         <h4 className="text-dark fs-5">{option.name}</h4>

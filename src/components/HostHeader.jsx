@@ -1,7 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { use } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const HostHeader = () => {
+  const navigate = useNavigate();
+
+
   return (
     <div className="">
       <div className="navbar navbar-expand-lg py-3">
@@ -25,7 +28,7 @@ const HostHeader = () => {
               </svg>
             </Link>
 
-            <button className="btn btn-sm px-4 py-2 btn-outline-secondary rounded-pill">
+            <button className="btn btn-sm px-4 py-2 btn-outline-secondary rounded-pill" onClick={()=>navigate('/hosting')}>
               Exit
             </button>
           </div>
