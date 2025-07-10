@@ -1,0 +1,59 @@
+.location-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.location-search {
+  padding: 1rem;
+  background: white;
+  border-radius: 10px;
+  max-width: 500px;
+  margin: 1rem auto;
+  position: relative;
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.location-search input {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.location-search button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  font-size: 1rem;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.suggestions-box {
+  position: absolute;
+  background: white;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 1001;
+}
+
+.suggestions-box div {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestions-box div:hover {
+  background: #f0f0f0;
+}
+
+.map {
+  flex: 1;
+  height: 100%;
+}

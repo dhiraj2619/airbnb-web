@@ -1,9 +1,11 @@
 import React, { use } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const HostHeader = () => {
+  const { user, isAuthenticated } = useSelector((state) => state.users);
   const navigate = useNavigate();
-
+  const location = useLocation();
 
   return (
     <div className="">
@@ -28,9 +30,22 @@ const HostHeader = () => {
               </svg>
             </Link>
 
-            <button className="btn btn-sm px-4 py-2 btn-outline-secondary rounded-pill" onClick={()=>navigate('/hosting')}>
-              Exit
-            </button>
+            {location.pathname === "/hosting" ? (
+              <>
+                {isAuthenticated && (
+                  <div className="user-profile-sm me-3">
+                    {user.firstName.charAt(0)}
+                  </div>
+                )}
+              </>
+            ) : (
+              <button
+                className="btn btn-sm px-4 py-2 btn-outline-secondary rounded-pill"
+                onClick={() => navigate("/hosting")}
+              >
+                Exit
+              </button>
+            )}
           </div>
         </div>
       </div>
