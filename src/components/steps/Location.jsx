@@ -24,7 +24,37 @@ const Location = () => {
               </div>
 
               <div className="combine-inputs mt-3 mb-4 rounded-2">
-                <div className="form-floating">
+           
+                <div className="form-floating border-1 border-bottom">
+                  <input
+                    type="text"
+                    name=""
+                    className="form-control border-0"
+                    placeholder="District/locality"
+                  />
+                  <label>Pincode</label>
+                </div>
+                <div className="form-floating border-1 border-bottom">
+                  <input
+                    type="text"
+                    name=""
+                    disabled
+                    className="form-control border-0"
+                    placeholder="District/locality"
+                  />
+                  <label>City</label>
+                </div>
+                <div className="form-floating border-1 border-bottom">
+                  <input
+                    type="text"
+                    name=""
+                    disabled
+                    className="form-control border-0"
+                    placeholder="District/locality"
+                  />
+                  <label>State</label>
+                </div>
+                <div className="form-floating border-bottom">
                   <input
                     type="text"
                     className="form-control border-0"
@@ -38,6 +68,7 @@ const Location = () => {
                     type="text"
                     name=""
                     className="form-control border-0"
+                    placeholder="Street Address"
                   />
                   <label>Street address</label>
                 </div>
