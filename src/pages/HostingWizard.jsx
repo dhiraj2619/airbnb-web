@@ -65,6 +65,7 @@ const HostingWizard = () => {
       onNext: goToNextStep,
       onBack: goToPreviousStep,
       currentStep: step,
+      propertyId
     };
     switch (step) {
       case "about-your-place":

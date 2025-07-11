@@ -5,7 +5,7 @@ import HostingSteps from "../HostingSteps";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLocationofProperty } from "../../redux/actions/PropertyAction";
 
-const Location = ({ onNext, onBack, currentStep }) => {
+const Location = ({ onNext, onBack, currentStep,propertyId }) => {
   const dispatch = useDispatch();
 
  
@@ -64,7 +64,7 @@ const Location = ({ onNext, onBack, currentStep }) => {
     try {
       await dispatch(
         updateLocationofProperty(
-          // propertyId,
+          propertyId,
           {
             city,
             state,

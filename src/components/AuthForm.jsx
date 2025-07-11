@@ -197,6 +197,8 @@ const AuthForm = ({
       navigate(hostFlow ? "/hosting/overview" : "/");
     }
   };
+
+  
   const ErrorCard = () => {
     if (!error) return null;
 
