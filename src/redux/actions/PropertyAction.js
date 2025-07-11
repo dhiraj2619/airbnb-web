@@ -37,6 +37,10 @@ export const fetchHostProperties = (userId) => async (dispatch) => {
 export const updateLocationofProperty =
   (propertyId, locationData, token) => async (dispatch) => {
     try {
+      console.log("payload being sent", locationData);
+      console.log("property id is", propertyId);
+      console.log("token is", token);
+
       dispatch({ type: UPDATE_PROPERTY_LOCATION_REQUEST });
 
       const { data } = await axios.put(
@@ -49,14 +53,17 @@ export const updateLocationofProperty =
         }
       );
 
+      console.log(" API response received:", data);
+
       dispatch({
         type: UPDATE_PROPERTY_LOCATION_SUCCESS,
         payload: data.property,
       });
 
-      console.log("Api response",data);
-      
+      console.log("Api response", data);
     } catch (error) {
+      console.error("Error while updating property location:", error);
+
       dispatch({
         type: UPDATE_PROPERTY_LOCATION_FAILURE,
         payload:

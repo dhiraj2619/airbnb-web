@@ -2,17 +2,18 @@ import axios from "axios";
 import React, { useState } from "react";
 import { BeatLoader } from "react-spinners";
 import HostingSteps from "../HostingSteps";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateLocationofProperty } from "../../redux/actions/PropertyAction";
 
 const Location = ({ onNext, onBack, currentStep }) => {
   const dispatch = useDispatch();
-  
 
+ 
+  
   const [pincode, setPincode] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
-  const [flathouse, setFlathouse] = useState("");
+  const [flatHouse, setFlatHouse] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -57,17 +58,17 @@ const Location = ({ onNext, onBack, currentStep }) => {
   };
 
   const handleNextLocation = async () => {
-    const propertyId = localStorage.getItem("pendingPropertyTypeId");
+
     const token = localStorage.getItem("authToken");
 
     try {
       await dispatch(
         updateLocationofProperty(
-          propertyId,
+          // propertyId,
           {
             city,
             state,
-            flathouse: flathouse,
+            flatHouse,
             streetAddress,
           },
           token
@@ -149,8 +150,8 @@ const Location = ({ onNext, onBack, currentStep }) => {
                     className="form-control border-0"
                     placeholder="Flat,House,etc (if Applicable)"
                     maxLength="50"
-                    value={flathouse}
-                    onChange={(e) => setFlathouse(e.target.value)}
+                    value={flatHouse}
+                    onChange={(e) => setFlatHouse(e.target.value)}
                   />
                   <label>Flat,House,etc (if Applicable)</label>
                 </div>
@@ -181,7 +182,10 @@ const Location = ({ onNext, onBack, currentStep }) => {
         >
           Back
         </button>
-        <button className="btn btn-dark fs-xlg px-4 py-2" onClick={handleNextLocation}>
+        <button
+          className="btn btn-dark fs-xlg px-4 py-2"
+          onClick={handleNextLocation}
+        >
           Next
         </button>
       </div>
