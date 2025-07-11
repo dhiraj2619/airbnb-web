@@ -11,15 +11,21 @@ const PrivacyType = ({ onBack, onNext ,currentStep}) => {
 
   useEffect(() => {
     const propertyTypeId = localStorage.getItem("pendingPropertyTypeId");
+    const storedPrivacyId  = localStorage.getItem("privacyId");
 
     if (propertyTypeId) {
       dispatch(fetchPrivacyOptions(propertyTypeId));
+    }
+
+    if(storedPrivacyId){
+      setSelectedPrivacyId(storedPrivacyId);
     }
   }, [dispatch]);
 
 
   const handleSelect=(id)=>{
       setSelectedPrivacyId(id);
+      localStorage.setItem("privacyId",id);
   }
 
   return (

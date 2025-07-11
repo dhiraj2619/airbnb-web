@@ -1,5 +1,14 @@
-import { FETCH_HOST_PROPERTY_FAILURE, FETCH_HOST_PROPERTY_REQUEST, FETCH_HOST_PROPERTY_SUCCESS, FETCH_PROPERTY_FAILURE, FETCH_PROPERTY_REQUEST, FETCH_PROPERTY_SUCCESS } from "../constants/PropertyConstant";
-
+import {
+  FETCH_HOST_PROPERTY_FAILURE,
+  FETCH_HOST_PROPERTY_REQUEST,
+  FETCH_HOST_PROPERTY_SUCCESS,
+  FETCH_PROPERTY_FAILURE,
+  FETCH_PROPERTY_REQUEST,
+  FETCH_PROPERTY_SUCCESS,
+  UPDATE_PROPERTY_LOCATION_FAILURE,
+  UPDATE_PROPERTY_LOCATION_REQUEST,
+  UPDATE_PROPERTY_LOCATION_SUCCESS,
+} from "../constants/PropertyConstant";
 
 const initialState = {
   properties: [],
@@ -11,6 +20,7 @@ export const propertyReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_PROPERTY_REQUEST:
     case FETCH_HOST_PROPERTY_REQUEST:
+    case UPDATE_PROPERTY_LOCATION_REQUEST:
       return {
         ...state,
         loading: true,
@@ -24,24 +34,32 @@ export const propertyReducer = (state = initialState, action) => {
       };
 
     case FETCH_HOST_PROPERTY_SUCCESS:
-      return{
-          ...state,
-          loading:false,
-          properties:action.payload,
-          error:false
+      return {
+        ...state,
+        loading: false,
+        properties: action.payload,
+        error: false,
       };
+
+    case UPDATE_PROPERTY_LOCATION_SUCCESS:
+      return{
+        ...state,
+        loading:false,
+        properties:state.properties.map((property)=>
+           property._id === action.payload._id ? action.payload : property
+        )
+      }
 
     case FETCH_PROPERTY_FAILURE:
     case FETCH_HOST_PROPERTY_FAILURE:
+    case UPDATE_PROPERTY_LOCATION_FAILURE:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
 
-    
     default:
       return state;
   }
 };
-
