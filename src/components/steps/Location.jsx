@@ -26,16 +26,29 @@ const Location = ({ onNext, onBack, currentStep, propertyId }) => {
         const property = await dispatch(getPropertyById(propertyId, token));
 
         console.log("Fetched Property:", property);
-        
+
+        const fullAddress = property.location.address;
+        const parts = fullAddress.split(",").map((p) => p.trim());
+
+        // Make sure there are at least 3 parts
+        let flatHouse = "";
+        let streetAddress = "";
+        let pincode = "";
+
+        if (parts.length >= 3) {
+          flatHouse = parts[0];
+          pincode = parts[parts.length - 1];
+          streetAddress = parts.slice(1, parts.length - 1).join(", ");
+        }
 
         if (property) {
           setCity(property.location.city || "");
           setState(property.location.state || "");
-          setFlatHouse(property.location.flatHouse || "");
-          setStreetAddress(property.location.streetAddress || "");
+          setFlatHouse(flatHouse|| "");
+          setStreetAddress(streetAddress || "");
 
           if (property.location.pincode) {
-            setPincode(property.location.pincode);
+            setPincode(pincode);
           }
         }
       } catch (error) {
@@ -44,7 +57,7 @@ const Location = ({ onNext, onBack, currentStep, propertyId }) => {
     };
 
     fetchData();
-  },[dispatch, propertyId, token]);
+  }, [dispatch, propertyId, token]);
 
   const handlePincodeChange = async (e) => {
     const value = e.target.value;
@@ -97,7 +110,7 @@ const Location = ({ onNext, onBack, currentStep, propertyId }) => {
             state,
             flatHouse,
             streetAddress,
-            pincode
+            pincode,
           },
           token
         )

@@ -5,7 +5,7 @@ import { updatePropertyStep } from "../redux/actions/PropertyAction";
 
 const HostHeader = () => {
   const { user, isAuthenticated } = useSelector((state) => state.users);
-  const {propertyId} = useParams();
+  const { propertyId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -13,22 +13,24 @@ const HostHeader = () => {
   const isOverviewPage = location.pathname === "/hosting/overview";
   const isWizardPage = /^\/hosting\/[^/]+\/[^/]+$/.test(location.pathname);
 
-  const handleSaveAndExit = async() => {
+  const handleSaveAndExit = async () => {
     const token = localStorage.getItem("authToken");
     if (!token || !propertyId) return;
 
     try {
-        const propertyTypeId = localStorage.getItem("pendingPropertyTypeId");
-        const privacyId = localStorage.getItem("privacyId");
-        
-        if(propertyTypeId || privacyId) {
-           await dispatch(updatePropertyStep(propertyId, {propertyTypeId,propertyId}, token));
+      const propertyTypeId = localStorage.getItem("pendingPropertyTypeId");
+      const privacyId = localStorage.getItem("privacyId");
 
-           
-        }
-    } catch (error) {}
+      if (propertyTypeId || privacyId) {
+        await dispatch(
+          updatePropertyStep(propertyId, { propertyTypeId, privacyId }, token)
+        );
+      }
 
-    navigate("/hosting/overview");
+      navigate("/hosting");
+    } catch (error) {
+      console.error("Failed to save:", error);
+    }
   };
 
   return (
