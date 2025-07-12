@@ -1,15 +1,17 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import HostingSteps from "../HostingSteps";
 import { useDispatch, useSelector } from "react-redux";
-import { updateLocationofProperty } from "../../redux/actions/PropertyAction";
+import {
+  getPropertyById,
+  updateLocationofProperty,
+} from "../../redux/actions/PropertyAction";
 
-const Location = ({ onNext, onBack, currentStep,propertyId }) => {
+const Location = ({ onNext, onBack, currentStep, propertyId }) => {
   const dispatch = useDispatch();
+  const token = localStorage.getItem("authToken");
 
- 
-  
   const [pincode, setPincode] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
@@ -17,6 +19,32 @@ const Location = ({ onNext, onBack, currentStep,propertyId }) => {
   const [streetAddress, setStreetAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const property = await dispatch(getPropertyById(propertyId, token));
+
+        console.log("Fetched Property:", property);
+        
+
+        if (property) {
+          setCity(property.location.city || "");
+          setState(property.location.state || "");
+          setFlatHouse(property.location.flatHouse || "");
+          setStreetAddress(property.location.streetAddress || "");
+
+          if (property.location.pincode) {
+            setPincode(property.location.pincode);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load property location", error);
+      }
+    };
+
+    fetchData();
+  },[dispatch, propertyId, token]);
 
   const handlePincodeChange = async (e) => {
     const value = e.target.value;
@@ -58,7 +86,6 @@ const Location = ({ onNext, onBack, currentStep,propertyId }) => {
   };
 
   const handleNextLocation = async () => {
-
     const token = localStorage.getItem("authToken");
 
     try {
@@ -70,6 +97,7 @@ const Location = ({ onNext, onBack, currentStep,propertyId }) => {
             state,
             flatHouse,
             streetAddress,
+            pincode
           },
           token
         )

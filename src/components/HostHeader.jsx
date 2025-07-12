@@ -1,11 +1,35 @@
-import React, { use } from "react";
-import { useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { updatePropertyStep } from "../redux/actions/PropertyAction";
 
 const HostHeader = () => {
   const { user, isAuthenticated } = useSelector((state) => state.users);
+  const {propertyId} = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
+
+  const isOverviewPage = location.pathname === "/hosting/overview";
+  const isWizardPage = /^\/hosting\/[^/]+\/[^/]+$/.test(location.pathname);
+
+  const handleSaveAndExit = async() => {
+    const token = localStorage.getItem("authToken");
+    if (!token || !propertyId) return;
+
+    try {
+        const propertyTypeId = localStorage.getItem("pendingPropertyTypeId");
+        const privacyId = localStorage.getItem("privacyId");
+        
+        if(propertyTypeId || privacyId) {
+           await dispatch(updatePropertyStep(propertyId, {propertyTypeId,propertyId}, token));
+
+           
+        }
+    } catch (error) {}
+
+    navigate("/hosting/overview");
+  };
 
   return (
     <div className="">
@@ -38,14 +62,21 @@ const HostHeader = () => {
                   </div>
                 )}
               </>
-            ) : (
+            ) : isOverviewPage ? (
               <button
                 className="btn btn-sm px-4 py-2 btn-outline-secondary rounded-pill"
                 onClick={() => navigate("/hosting")}
               >
                 Exit
               </button>
-            )}
+            ) : isWizardPage ? (
+              <button
+                className="btn btn-sm px-4 py-2 btn-outline-secondary rounded-pill"
+                onClick={handleSaveAndExit}
+              >
+                save and exit
+              </button>
+            ) : null}
           </div>
         </div>
       </div>

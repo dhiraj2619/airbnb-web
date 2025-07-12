@@ -8,15 +8,13 @@ export const fetchCategories=()=>async(dispatch)=>{
 
       const {data} = await axios.get(`${ServerApi}/category/getAll`);
       
-
-      console.log("Fetched categories data:", data);
       
       dispatch({
         type:FETCH_CATEGORIES_SUCCESS,
         payload:data.categories
       });
 
-      console.log("Categories fetched successfully:", data.categories);
+      
       
   } catch (error) {
          console.error("Error fetching categories:", error);

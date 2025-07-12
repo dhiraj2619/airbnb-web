@@ -15,8 +15,6 @@ export const fetchAllPropertyTypes = () => async (dispatch) => {
 
     const { data } = await axios.get(`${ServerApi}/property/alltypes`);
 
-    console.log("data getting here", data);
-
     dispatch({ type: FETCH_PROPERTYTYPE_SUCCESS, payload: data.allTypes });
 
 
@@ -39,7 +37,7 @@ export const fetchPrivacyOptions=(propertyTypeId)=>async(dispatch)=>{
 
       const {data} = await axios.get(`${ServerApi}/property/privacyoptions/${propertyTypeId}`);
 
-      console.log("privacy options data getting here", data);
+     
       
       dispatch({type:FETCH_PROPERTY_OPTIONS_SUCCESS,payload:data.options});
       

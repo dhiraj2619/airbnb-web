@@ -112,7 +112,6 @@ const AuthForm = ({
   };
 
   const handleSignUp = async () => {
-    console.log("[SIGN-UP] handleSignUp clicked");
     clearError();
 
     const { firstName, lastName, mobile, password, dateofbirth } = signupData;
@@ -188,8 +187,7 @@ const AuthForm = ({
       if (userId) {
         const fetchedProperties = await dispatch(fetchHostProperties(userId));
 
-        console.log("fetched properties of user", fetchedProperties);
-
+     
         if (fetchedProperties.length > 0) {
           return navigate("/hosting");
         }

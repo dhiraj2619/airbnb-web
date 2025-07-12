@@ -5,9 +5,15 @@ import {
   FETCH_PROPERTY_FAILURE,
   FETCH_PROPERTY_REQUEST,
   FETCH_PROPERTY_SUCCESS,
+  GET_PROPERTY_BYID_FAILURE,
+  GET_PROPERTY_BYID_REQUEST,
+  GET_PROPERTY_BYID_SUCCESS,
   UPDATE_PROPERTY_LOCATION_FAILURE,
   UPDATE_PROPERTY_LOCATION_REQUEST,
   UPDATE_PROPERTY_LOCATION_SUCCESS,
+  UPDATE_PROPERTY_STEP_FAILURE,
+  UPDATE_PROPERTY_STEP_REQUEST,
+  UPDATE_PROPERTY_STEP_SUCCESS,
 } from "../constants/PropertyConstant";
 
 const initialState = {
@@ -21,6 +27,8 @@ export const propertyReducer = (state = initialState, action) => {
     case FETCH_PROPERTY_REQUEST:
     case FETCH_HOST_PROPERTY_REQUEST:
     case UPDATE_PROPERTY_LOCATION_REQUEST:
+    case UPDATE_PROPERTY_STEP_REQUEST:
+    case GET_PROPERTY_BYID_REQUEST:
       return {
         ...state,
         loading: true,
@@ -42,17 +50,31 @@ export const propertyReducer = (state = initialState, action) => {
       };
 
     case UPDATE_PROPERTY_LOCATION_SUCCESS:
-      return{
+    case UPDATE_PROPERTY_STEP_SUCCESS:
+      return {
         ...state,
-        loading:false,
-        properties:state.properties.map((property)=>
-           property._id === action.payload._id ? action.payload : property
-        )
-      }
+        loading: false,
+        properties: state.properties.map((property) =>
+          property._id === action.payload._id ? action.payload : property
+        ),
+      };
+
+    case GET_PROPERTY_BYID_SUCCESS:
+      const updatedProperties = state.properties.filter(
+        (p) => p._id !== action.payload._id
+      );
+
+      return {
+        ...state,
+        loading: false,
+        properties: [...updatedProperties, action.payload],
+      };
 
     case FETCH_PROPERTY_FAILURE:
     case FETCH_HOST_PROPERTY_FAILURE:
     case UPDATE_PROPERTY_LOCATION_FAILURE:
+    case UPDATE_PROPERTY_STEP_FAILURE:
+    case GET_PROPERTY_BYID_FAILURE:
       return {
         ...state,
         loading: false,

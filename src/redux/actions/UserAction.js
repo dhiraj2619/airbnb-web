@@ -47,16 +47,6 @@ export const RegisterUser =
     try {
       dispatch({ type: REGISTER_USER_REQUEST });
 
-      console.log("[REGISTER_USER] outgoing POST body:", {
-        firstName,
-        lastName,
-        email,
-        mobile,
-        dateofbirth,
-        password,
-        role,
-      });
-
       const { data } = await axios.post(`${ServerApi}/user/signup`, {
         firstName,
         lastName,
@@ -67,7 +57,7 @@ export const RegisterUser =
         address: "N/A",
         role,
       });
-      console.log("[REGISTER_USER] server responded:", data);
+    
 
       localStorage.setItem("token", data.token);
 

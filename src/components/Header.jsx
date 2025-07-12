@@ -307,7 +307,6 @@ const Header = () => {
                   className="btn btn-dark nexttbtn px-4 py-2"
                   disabled={!selectedTypeId}
                   onClick={() => {
-                    console.log("selected Property Type id", selectedTypeId);
                     setShowHostModal(false);
                     navigate("/become-a-host");
                     localStorage.setItem("pendingPropertyTypeId", selectedTypeId);

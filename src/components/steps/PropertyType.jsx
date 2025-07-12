@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import HostingSteps from "../HostingSteps";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllPropertyTypes } from "../../redux/actions/PropertyTypeAction";
 
@@ -8,8 +7,6 @@ const PropertyType = ({ onNext,onBack,currentStep}) => {
   const { propertyTypes } = useSelector((state) => state.propertyTypes);
   const [selectedTypeId, setSelectedTypeId] = useState(null);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
 
   useEffect(()=>{
       dispatch(fetchAllPropertyTypes());
