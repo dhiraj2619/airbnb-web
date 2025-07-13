@@ -37,6 +37,7 @@ const Category = ({onNext,onBack,currentStep}) => {
                       selectedCategoryId === cat._id ? "border-tight" : ""
                     }`}
                     onClick={() => handleSelect(cat._id)}
+                    style={{cursor: "pointer"}}
                   >
                     <div className="card-body d-flex flex-column align-items-center justify-content-center">
                       <img
