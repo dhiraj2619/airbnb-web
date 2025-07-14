@@ -145,6 +145,7 @@ export const LogoutUser = () => async (dispatch) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("pendingPropertyTypeId");
+    localStorage.removeItem("categoryId");
 
   
 

@@ -114,14 +114,12 @@ export const getPropertyById = (propertyId, token) => async (dispatch) => {
       },
     });
 
-    
-    
-
     dispatch({
       type: GET_PROPERTY_BYID_SUCCESS,
       payload: data.property,
     });
     return data.property;
+    
   } catch (error) {
     console.error("Error fetching property by ID:", error);
 

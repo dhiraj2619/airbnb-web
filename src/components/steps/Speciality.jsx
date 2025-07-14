@@ -14,6 +14,11 @@ const Category = ({onNext,onBack,currentStep}) => {
 
     useEffect(()=>{
         dispatch(fetchCategories());
+
+        const storedSpecialityId = localStorage.getItem("categoryId");  
+        if(storedSpecialityId){
+            setSelectedCategoryId(storedSpecialityId);
+        }
     },[dispatch]);
 
 
@@ -26,7 +31,7 @@ const Category = ({onNext,onBack,currentStep}) => {
   <section className="" style={{ height: "520px" }}>
       <div className="container-fluid h-100">
         <div className="row justify-content-center  h-100">
-           <span className="fw-semibold text-center text-dark fs-2">Select Special Category</span>
+           <span className="fw-semibold text-center text-dark fs-2">Select Speciality of Place</span>
           <div className="col-lg-7">
           
             <div className="row g-3">

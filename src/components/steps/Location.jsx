@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import HostingSteps from "../HostingSteps";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   getPropertyById,
   updateLocationofProperty,

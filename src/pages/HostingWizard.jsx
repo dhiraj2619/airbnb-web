@@ -5,7 +5,7 @@ import PropertyType from "../components/steps/PropertyType";
 import PrivacyType from "../components/steps/PrivacyType";
 import { useSelector } from "react-redux";
 import Location from "../components/steps/Location";
-import Category from "../components/steps/Category";
+import Category from "../components/steps/Speciality";
 
 const HostingWizard = () => {
   const stepsOrder = [
@@ -13,7 +13,7 @@ const HostingWizard = () => {
     "property-type",
     "privacy-type",
     "location",
-    "category",
+    "speciality",
     "amenities",
     "photos",
     "pricing",
@@ -81,7 +81,8 @@ const HostingWizard = () => {
 
       case "location":
         return <Location {...stepProps}/>
-      case "category":
+        
+      case "speciality":
         return <Category {...stepProps}/>
 
       default:
