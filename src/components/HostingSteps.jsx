@@ -6,6 +6,7 @@ const steps = [
   "privacy-type",
   "location",
   "speciality",
+  "floor-plan",
   "amenities",
   "photos",
   "pricing",

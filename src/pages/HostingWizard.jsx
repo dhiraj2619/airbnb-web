@@ -6,6 +6,7 @@ import PrivacyType from "../components/steps/PrivacyType";
 import { useSelector } from "react-redux";
 import Location from "../components/steps/Location";
 import Category from "../components/steps/Speciality";
+import FloorPlan from "../components/steps/FloorPlan";
 
 const HostingWizard = () => {
   const stepsOrder = [
@@ -70,6 +71,7 @@ const HostingWizard = () => {
       currentStep: step,
       propertyId
     };
+    
     switch (step) {
       case "about-your-place":
         return <Aboutplace {...stepProps} />;
@@ -85,6 +87,9 @@ const HostingWizard = () => {
         
       case "speciality":
         return <Category {...stepProps}/>
+    
+      case "floor-plan":
+        return <FloorPlan {...stepProps} />;
 
       default:
         return <div>Step not found</div>;

@@ -148,6 +148,7 @@ export const getPrivacyOptionByID = (privacyId, token) => async (dispatch) => {
       }
     );
 
+    
     dispatch({
       type: GET_SELECTED_PRIVACY_BY_ID_SUCCESS,
       payload: data.privacyOption,

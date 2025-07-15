@@ -1,39 +1,37 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCategories } from '../../redux/actions/CategoryAction';
-import HostingSteps from '../HostingSteps';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "../../redux/actions/CategoryAction";
+import HostingSteps from "../HostingSteps";
 
-const Category = ({onNext,onBack,currentStep}) => {
+const Category = ({ onNext, onBack, currentStep }) => {
+  const { categories } = useSelector((state) => state.categories);
 
-    const {categories} = useSelector((state)=>state.categories);
-  
-    
-     const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
-    useEffect(()=>{
-        dispatch(fetchCategories());
+  useEffect(() => {
+    dispatch(fetchCategories());
 
-        const storedSpecialityId = localStorage.getItem("categoryId");  
-        if(storedSpecialityId){
-            setSelectedCategoryId(storedSpecialityId);
-        }
-    },[dispatch]);
-
-
-    const handleSelect=(id)=>{
-        setSelectedCategoryId(id);  
-        localStorage.setItem("categoryId",id);
+    const storedSpecialityId = localStorage.getItem("categoryId");
+    if (storedSpecialityId) {
+      setSelectedCategoryId(storedSpecialityId);
     }
+  }, [dispatch]);
+
+  const handleSelect = (id) => {
+    setSelectedCategoryId(id);
+    localStorage.setItem("categoryId", id);
+  };
 
   return (
-  <section className="" style={{ height: "520px" }}>
+    <section className="" style={{ height: "520px" }}>
       <div className="container-fluid h-100">
         <div className="row justify-content-center  h-100">
-           <span className="fw-semibold text-center text-dark fs-2">Select Speciality of Place</span>
+          <span className="fw-semibold text-center text-dark fs-2">
+            Select Speciality of Place
+          </span>
           <div className="col-lg-7">
-          
             <div className="row g-3">
               {categories.map((cat) => (
                 <div className="col-lg-3" key={cat._id}>
@@ -42,7 +40,7 @@ const Category = ({onNext,onBack,currentStep}) => {
                       selectedCategoryId === cat._id ? "border-tight" : ""
                     }`}
                     onClick={() => handleSelect(cat._id)}
-                    style={{cursor: "pointer"}}
+                    style={{ cursor: "pointer" }}
                   >
                     <div className="card-body d-flex flex-column align-items-center justify-content-center">
                       <img
@@ -72,12 +70,16 @@ const Category = ({onNext,onBack,currentStep}) => {
         >
           Back
         </button>
-        <button className="btn btn-dark fs-xlg px-4 py-2" disabled={!selectedCategoryId} onClick={onNext}>
+        <button
+          className="btn btn-dark fs-xlg px-4 py-2"
+          disabled={!selectedCategoryId}
+          onClick={onNext}
+        >
           Next
         </button>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Category
+export default Category;

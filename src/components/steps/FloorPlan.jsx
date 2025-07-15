@@ -1,9 +1,131 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import HostingSteps from "../HostingSteps";
+import { useDispatch, useSelector } from "react-redux";
+import { getPrivacyOptionByID, updatePropertyStep } from "../../redux/actions/PropertyAction";
 
-const FloorPlan = () => {
+const FloorPlan = ({ onNext, onBack, currentStep,propertyId }) => {
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("authToken");
+  const privacyId = localStorage.getItem("privacyId");
+
+  const { selectedPrivacyId } = useSelector((state) => state.privacyOptions);
+
+  const [counts, setCounts] = useState({
+    beds: 1,
+    bathrooms: 1,
+    guests: 1,
+    bedrooms: selectedPrivacyId?.extraBedrooms ? 1 : 0,
+  });
+
+  useEffect(() => {
+    if (privacyId && token) {
+      dispatch(getPrivacyOptionByID(privacyId, token));
+    }
+  }, [dispatch, privacyId, token]);
+
+  const extraBedRooms = selectedPrivacyId?.extraBedrooms;
+
+  const floorPlan = ["beds", "bathrooms", "guests"];
+
+  if (extraBedRooms) {
+    floorPlan.push("bedrooms");
+  }
+
+  const handleIncrement = (item) => {
+    setCounts((prevCounts) => ({
+      ...prevCounts,
+      [item]: prevCounts[item] + 1,
+    }));
+  };
+
+  const handleDecrement = (item) => {
+    setCounts((prevCounts) => ({
+      ...prevCounts,
+      [item]: Math.max(1, prevCounts[item] - 1),
+    }));
+  };
+
+
+  const handleClickNext=async()=>{
+      const payload = {
+        ...counts,  
+      }
+
+      if(!extraBedRooms){
+        delete payload.bedrooms;
+      }
+
+      try {
+          await dispatch(updatePropertyStep(propertyId, payload, token));
+          onNext(); 
+
+      } catch (error) {
+          console.error("Error updating property step:", error);
+      }
+  }
+
   return (
-    <div></div>
-  )
-}
+    <section className="" style={{ height: "520px" }}>
+      <div className="container-fluid h-100">
+        <div className="row justify-content-center align-items-center">
+          <div className="col-lg-6">
+            <h3 className="fw-semibold fs-3">
+              Share some basics about your place
+            </h3>
+            <span className="fw-light text-center text-dark fs-5">
+              You'll add more details later, such as bed types.
+            </span>
 
-export default FloorPlan
+            <div className="my-5">
+              {floorPlan.map((item, index) => (
+                <div
+                  className="d-flex justify-content-between align-items-center border-bottom py-4"
+                  key={index}
+                >
+                  <span
+                    className="fs-5 text-dark fw-normal"
+                    style={{ textTransform: "capitalize" }}
+                  >
+                    {item}
+                  </span>
+                  <div className="d-flex flex-row align-items-center gap-3">
+                    <button
+                      className="btn countbtn  btn-sm"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => handleDecrement(item)}
+                    >
+                      -
+                    </button>
+                    <span className="fs-6">{counts[item]}</span>
+                    <button
+                      className="btn countbtn  btn-sm"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => handleIncrement(item)}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <HostingSteps currentStep={currentStep} />
+      <div className="d-flex justify-content-between pt-3 px-4 ">
+        <button
+          className="btn text-dark fs-xlg btn-link px-5 py-2"
+          onClick={onBack}
+        >
+          Back
+        </button>
+        <button className="btn btn-dark fs-xlg px-4 py-2" onClick={handleClickNext}>
+          Next
+        </button>
+      </div>
+    </section>
+  );
+};
+
+export default FloorPlan;
