@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import HostingSteps from "../HostingSteps";
 import { useDispatch, useSelector } from "react-redux";
-import { getPrivacyOptionByID, updatePropertyStep } from "../../redux/actions/PropertyAction";
+import {
+  getPrivacyOptionByID,
+  updatePropertyStep,
+} from "../../redux/actions/PropertyAction";
 
-const FloorPlan = ({ onNext, onBack, currentStep,propertyId }) => {
+const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("authToken");
   const privacyId = localStorage.getItem("privacyId");
+  const propertyTypeId = localStorage.getItem("pendingPropertyTypeId");
 
   const { selectedPrivacyId } = useSelector((state) => state.privacyOptions);
+
 
   const [counts, setCounts] = useState({
     beds: 1,
@@ -45,24 +50,24 @@ const FloorPlan = ({ onNext, onBack, currentStep,propertyId }) => {
     }));
   };
 
+  const handleClickNext = async () => {
+    const payload = {
+      ...counts,
+      propertyTypeId,
+      privacyId: selectedPrivacyId?._id || privacyId,
+    };
 
-  const handleClickNext=async()=>{
-      const payload = {
-        ...counts,  
-      }
+    if (!extraBedRooms) {
+      delete payload.bedrooms;
+    }
 
-      if(!extraBedRooms){
-        delete payload.bedrooms;
-      }
-
-      try {
-          await dispatch(updatePropertyStep(propertyId, payload, token));
-          onNext(); 
-
-      } catch (error) {
-          console.error("Error updating property step:", error);
-      }
-  }
+    try {
+      await dispatch(updatePropertyStep(propertyId, payload, token));
+      onNext();
+    } catch (error) {
+      console.error("Error updating property step:", error);
+    }
+  };
 
   return (
     <section className="" style={{ height: "520px" }}>
@@ -120,7 +125,10 @@ const FloorPlan = ({ onNext, onBack, currentStep,propertyId }) => {
         >
           Back
         </button>
-        <button className="btn btn-dark fs-xlg px-4 py-2" onClick={handleClickNext}>
+        <button
+          className="btn btn-dark fs-xlg px-4 py-2"
+          onClick={handleClickNext}
+        >
           Next
         </button>
       </div>
