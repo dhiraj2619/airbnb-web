@@ -6,6 +6,9 @@ import {
   GET_PROPERTY_BYID_FAILURE,
   GET_PROPERTY_BYID_REQUEST,
   GET_PROPERTY_BYID_SUCCESS,
+  GET_SELECTED_PRIVACY_BY_ID_FAILURE,
+  GET_SELECTED_PRIVACY_BY_ID_REQUEST,
+  GET_SELECTED_PRIVACY_BY_ID_SUCCESS,
   UPDATE_PROPERTY_LOCATION_FAILURE,
   UPDATE_PROPERTY_LOCATION_REQUEST,
   UPDATE_PROPERTY_LOCATION_SUCCESS,
@@ -119,12 +122,45 @@ export const getPropertyById = (propertyId, token) => async (dispatch) => {
       payload: data.property,
     });
     return data.property;
-    
   } catch (error) {
     console.error("Error fetching property by ID:", error);
 
     dispatch({
       type: GET_PROPERTY_BYID_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getPrivacyOptionByID = (privacyId, token) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_SELECTED_PRIVACY_BY_ID_REQUEST });
+
+    const { data } = await axios.get(
+      `${ServerApi}/property/privacytype/${privacyId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    dispatch({
+      type: GET_SELECTED_PRIVACY_BY_ID_SUCCESS,
+      payload: data.privacyOption,
+    });
+
+    console.log("Privacy option fetched successfully:", data.privacyOption);
+
+    return data.privacyOption;
+  } catch (error) {
+    console.error("Error fetching privacy option by ID:", error);
+
+    dispatch({
+      type: GET_SELECTED_PRIVACY_BY_ID_FAILURE,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
