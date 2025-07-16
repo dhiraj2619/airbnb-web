@@ -11,9 +11,9 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
   const token = localStorage.getItem("authToken");
   const privacyId = localStorage.getItem("privacyId");
   const propertyTypeId = localStorage.getItem("pendingPropertyTypeId");
+  const categoryId = localStorage.getItem("categoryId");
 
   const { selectedPrivacyId } = useSelector((state) => state.privacyOptions);
-
 
   const [counts, setCounts] = useState({
     beds: 1,
@@ -53,8 +53,9 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
   const handleClickNext = async () => {
     const payload = {
       ...counts,
-      propertyTypeId,
-      privacyId: selectedPrivacyId?._id || privacyId,
+      propertyType: propertyTypeId,
+      privacyType: selectedPrivacyId?._id || privacyId,
+      category: categoryId,
     };
 
     if (!extraBedRooms) {
