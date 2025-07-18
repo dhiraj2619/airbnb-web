@@ -20,6 +20,7 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
     bathrooms: 1,
     guests: 1,
     bedrooms: selectedPrivacyId?.extraBedrooms ? 1 : 0,
+    locksToAllBedrooms: false,
   });
 
   useEffect(() => {
@@ -56,6 +57,7 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
       propertyType: propertyTypeId,
       privacyType: selectedPrivacyId?._id || privacyId,
       category: categoryId,
+      locksToAllBedrooms: counts.locksToAllBedrooms || false,
     };
 
     if (!extraBedRooms) {
@@ -71,18 +73,18 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
   };
 
   return (
-    <section className="" style={{ height: "520px" }}>
+    <section className="" style={{ height: "590px" }}>
       <div className="container-fluid h-100">
         <div className="row justify-content-center align-items-center">
           <div className="col-lg-6">
             <h3 className="fw-semibold fs-3">
               Share some basics about your place
             </h3>
-            <span className="fw-light text-center text-dark fs-5">
-              You'll add more details later, such as bed types.
-            </span>
+            <h5 className="fw-dark text-dark fs-5 mt-4 mb-3">
+              How many people can stay here?
+            </h5>
 
-            <div className="my-5">
+            <div className="mb-2">
               {floorPlan.map((item, index) => (
                 <div
                   className="d-flex justify-content-between align-items-center border-bottom py-4"
@@ -113,6 +115,45 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-4">
+              <h5 className="fw-dark text-dark fs-5 mt-4 mb-3">
+                Does every bedroom have a lock?
+              </h5>
+
+              <div className="form-check form-check-online">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  name="bedroomLock"
+                  id="bedroomLockYes"
+                  value="yes"
+                  checked={counts.locksToAllBedrooms === true}
+                  onChange={() =>
+                    setCounts((prev) => ({ ...prev, locksToAllBedrooms: true }))
+                  }
+                />
+                <label className="form-check-label" htmlFor="bedroomLockYes">
+                  Yes
+                </label>
+              </div>
+              <div className="form-check form-check-online mt-3">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  name="bedroomLock"
+                  id="bedroomLockNo"
+                  value="no"
+                  checked={counts.locksToAllBedrooms === false}
+                  onChange={() =>
+                    setCounts((prev) => ({ ...prev, locksToAllBedrooms: false }))
+                  }
+                />
+                <label className="form-check-label" htmlFor="bedroomLockYes">
+                  No
+                </label>
+              </div>
             </div>
           </div>
         </div>
