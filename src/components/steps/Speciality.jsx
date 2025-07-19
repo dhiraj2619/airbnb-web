@@ -2,16 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/actions/CategoryAction";
 import HostingSteps from "../HostingSteps";
+import { BeatLoader } from "react-spinners";
 
 const Category = ({ onNext, onBack, currentStep }) => {
   const { categories } = useSelector((state) => state.categories);
 
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [loadingBack, setLoadingBack] = useState(false);
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchCategories());
+        dispatch(fetchCategories());
 
     const storedSpecialityId = localStorage.getItem("categoryId");
     if (storedSpecialityId) {
@@ -22,6 +25,26 @@ const Category = ({ onNext, onBack, currentStep }) => {
   const handleSelect = (id) => {
     setSelectedCategoryId(id);
     localStorage.setItem("categoryId", id);
+  };
+
+  const handleClickNext = () => {
+    if (!selectedCategoryId || loading) return;
+    setLoading(true);
+
+    setTimeout(() => {
+      onNext();
+      setLoading(false);
+    }, 2000);
+  };
+
+  const handleClickBack = () => {
+    if (loading) return;
+    setLoadingBack(true);
+
+    setTimeout(() => {
+      onBack();
+      setLoadingBack(false);
+    }, 1200);
   };
 
   return (
@@ -66,16 +89,19 @@ const Category = ({ onNext, onBack, currentStep }) => {
       <div className="d-flex justify-content-between pt-3 px-4 ">
         <button
           className="btn text-dark fs-xlg btn-link px-5 py-2"
-          onClick={onBack}
+          onClick={handleClickBack}
+          disabled={loadingBack}
+          style={{ backgroundColor: loadingBack ? "#e2dbdbff" : "" }}
         >
-          Back
+          {loadingBack ? <BeatLoader size={8} color="#010101" /> : "Back"}
         </button>
         <button
           className="btn btn-dark fs-xlg px-4 py-2"
-          disabled={!selectedCategoryId}
-          onClick={onNext}
+          disabled={!selectedCategoryId || loading}
+          onClick={handleClickNext}
+          style={{ backgroundColor: loading ? "#313131c4" : "" }}
         >
-          Next
+          {loading ? <BeatLoader size={8} color="#ffffff" /> : "Next"}
         </button>
       </div>
     </section>

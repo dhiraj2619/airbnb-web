@@ -5,6 +5,7 @@ import {
   getPrivacyOptionByID,
   updatePropertyStep,
 } from "../../redux/actions/PropertyAction";
+import { BeatLoader } from "react-spinners";
 
 const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
   const dispatch = useDispatch();
@@ -22,6 +23,9 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
     bedrooms: selectedPrivacyId?.extraBedrooms ? 1 : 0,
     locksToAllBedrooms: false,
   });
+
+  const [loading, setLoading] = useState(false);
+  const [loadingBack, setLoadingBack] = useState(false);
 
   useEffect(() => {
     if (privacyId && token) {
@@ -52,6 +56,9 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
   };
 
   const handleClickNext = async () => {
+    if (loading) return;
+
+    setLoading(true);
     const payload = {
       ...counts,
       propertyType: propertyTypeId,
@@ -66,14 +73,27 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
 
     try {
       await dispatch(updatePropertyStep(propertyId, payload, token));
+      setTimeout(() => {
+        setLoading(false);
+        onNext();
+      }, 2000);
       onNext();
     } catch (error) {
       console.error("Error updating property step:", error);
     }
   };
 
+  const handleClickBack = () => {
+    if (loading) return;
+    setLoadingBack(true);
+    setTimeout(() => {
+      onBack();
+      setLoadingBack(false);
+    }, 1200);
+  };
+
   return (
-    <div className="" style={{ maxHeight: "500px",overflowY:'scroll' }}>
+    <div className="" style={{ maxHeight: "500px", overflowY: "scroll" }}>
       <section className="">
         <div className="container-fluid h-100">
           <div className="row justify-content-center align-items-center">
@@ -171,15 +191,20 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
         <div className="d-flex justify-content-between pt-3 px-4 ">
           <button
             className="btn text-dark fs-xlg btn-link px-5 py-2"
-            onClick={onBack}
+            onClick={handleClickBack}
+             disabled={loadingBack}
+            style={{backgroundColor: loadingBack ? '#e2dbdbff' : ''}}
           >
-            Back
+            {loadingBack ? (  <BeatLoader size={8} color="#010101" />)  :("Back")}
           </button>
           <button
             className="btn btn-dark fs-xlg px-4 py-2"
             onClick={handleClickNext}
+            disabled={loading}
+            style={{backgroundColor: loading ? '#807c7cff' : ''}}
           >
-            Next
+            {loading ? (  <BeatLoader size={8} color="#fff" />)  :("Next")}
+            
           </button>
         </div>
       </div>

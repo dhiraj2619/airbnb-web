@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import Location from "../components/steps/Location";
 import Category from "../components/steps/Speciality";
 import FloorPlan from "../components/steps/FloorPlan";
+import Amenities from "../components/steps/Amenities";
 
 const HostingWizard = () => {
   const stepsOrder = [
@@ -90,6 +91,9 @@ const HostingWizard = () => {
     
       case "floor-plan":
         return <FloorPlan {...stepProps} />;
+        
+      case "amenities":
+        return <Amenities {...stepProps} />;
 
       default:
         return <div>Step not found</div>;

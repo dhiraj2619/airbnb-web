@@ -17,7 +17,9 @@ const Location = ({ onNext, onBack, currentStep, propertyId }) => {
   const [state, setState] = useState("");
   const [flatHouse, setFlatHouse] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
+  const [loadingPincode, setLoadingPincode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingBack, setLoadingBack] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -44,7 +46,7 @@ const Location = ({ onNext, onBack, currentStep, propertyId }) => {
         if (property) {
           setCity(property.location.city || "");
           setState(property.location.state || "");
-          setFlatHouse(flatHouse|| "");
+          setFlatHouse(flatHouse || "");
           setStreetAddress(streetAddress || "");
 
           if (property.location.pincode) {
@@ -65,7 +67,7 @@ const Location = ({ onNext, onBack, currentStep, propertyId }) => {
 
     if (value.length === 6) {
       try {
-        setLoading(true);
+        setLoadingPincode(true);
 
         const res = await axios.get(
           `https://api.postalpincode.in/pincode/${value}`
@@ -89,7 +91,7 @@ const Location = ({ onNext, onBack, currentStep, propertyId }) => {
         setState("");
         setError("Failed to fetch location");
       } finally {
-        setLoading(false);
+        setLoadingPincode(false);
       }
     } else {
       setCity("");
@@ -99,6 +101,8 @@ const Location = ({ onNext, onBack, currentStep, propertyId }) => {
   };
 
   const handleNextLocation = async () => {
+    if (loading) return;
+    setLoading(true);
     const token = localStorage.getItem("authToken");
 
     try {
@@ -116,13 +120,23 @@ const Location = ({ onNext, onBack, currentStep, propertyId }) => {
         )
       );
 
-      onNext();
+      setTimeout(() => {
+        setLoading(false);
+        onNext();
+      }, 2000);
     } catch (error) {
       console.error("Error updating location", error);
       setError("Could not update location");
     }
   };
-
+  const handleClickBack = () => {
+    if (loading) return;
+    setLoadingBack(true);
+    setTimeout(() => {
+      onBack();
+      setLoadingBack(false);
+    }, 1200);
+  };
   return (
     <section className="" style={{ height: "520px" }}>
       <div className="container-fluid h-100">
@@ -157,7 +171,7 @@ const Location = ({ onNext, onBack, currentStep, propertyId }) => {
                     maxLength="6"
                   />
                   <label>Pincode</label>
-                  {loading && (
+                  {loadingPincode && (
                     <div className="position-absolute top-50 end-0 translate-middle-y me-3">
                       <BeatLoader size={8} color="#6c757d" />
                     </div>
@@ -219,15 +233,19 @@ const Location = ({ onNext, onBack, currentStep, propertyId }) => {
       <div className="d-flex justify-content-between px-4 pt-3">
         <button
           className="btn text-dark fs-xlg btn-link px-5 py-2"
-          onClick={onBack}
+          onClick={handleClickBack}
+          disabled={loadingBack}
+          style={{ backgroundColor: loadingBack ? "#e2dbdbff" : "" }}
         >
-          Back
+          {loadingBack ? <BeatLoader size={8} color="#010101" /> : "Back"}
         </button>
         <button
           className="btn btn-dark fs-xlg px-4 py-2"
           onClick={handleNextLocation}
+          disabled={loading}
+          style={{ backgroundColor: loading ? "#807c7cff" : "" }}
         >
-          Next
+          {loading ? <BeatLoader size={8} color="#fff" /> : "Next"}
         </button>
       </div>
     </section>
