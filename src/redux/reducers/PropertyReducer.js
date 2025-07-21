@@ -20,7 +20,6 @@ const initialState = {
   properties: [],
   loading: false,
   error: null,
-  
 };
 
 export const propertyReducer = (state = initialState, action) => {

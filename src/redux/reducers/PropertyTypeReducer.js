@@ -1,4 +1,6 @@
 import {
+  FETCH_PROPERTY_AMENITYLIST_REQUEST,
+  FETCH_PROPERTY_AMENITYLIST_SUCCESS,
   FETCH_PROPERTY_OPTIONS_FAILURE,
   FETCH_PROPERTY_OPTIONS_REQUEST,
   FETCH_PROPERTY_OPTIONS_SUCCESS,
@@ -14,6 +16,7 @@ const initalState = {
   loading: false,
   propertyTypes: [],
   privacyOptions:[],
+  amenities:[],
   error: null,
   selectedPrivacyId:null
 };
@@ -77,4 +80,31 @@ export const PrivacyOptionsReducer=(state=initalState,action)=>{
     default:
       return state;
    }
+}
+
+export const AmenitiesReducer=(state=initalState,action)=>{
+  switch(action.type){
+     case FETCH_PROPERTY_AMENITYLIST_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+      case FETCH_PROPERTY_AMENITYLIST_SUCCESS:
+        return{
+          ...state,
+          loading: false,
+          amenities: action.payload,
+        }
+
+      case FETCH_PROPERTY_OPTIONS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+      default:
+        return state;
+  }
 }
