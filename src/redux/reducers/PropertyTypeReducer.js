@@ -1,4 +1,5 @@
 import {
+  FETCH_PROPERTY_AMENITYLIST_FAILURE,
   FETCH_PROPERTY_AMENITYLIST_REQUEST,
   FETCH_PROPERTY_AMENITYLIST_SUCCESS,
   FETCH_PROPERTY_OPTIONS_FAILURE,
@@ -98,7 +99,7 @@ export const AmenitiesReducer=(state=initalState,action)=>{
           amenities: action.payload,
         }
 
-      case FETCH_PROPERTY_OPTIONS_FAILURE:
+      case FETCH_PROPERTY_AMENITYLIST_FAILURE:
       return {
         ...state,
         loading: false,

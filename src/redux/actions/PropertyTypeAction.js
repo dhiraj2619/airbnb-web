@@ -70,6 +70,7 @@ export const fetchAmenititesList =
         type: FETCH_PROPERTY_AMENITYLIST_SUCCESS,
         payload: data.amenities,
       });
+      
     } catch (error) {
       console.error("Error fetching amenities list:", error);
       dispatch({

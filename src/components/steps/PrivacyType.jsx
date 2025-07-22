@@ -3,7 +3,7 @@ import HostingSteps from "../HostingSteps";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPrivacyOptions } from "../../redux/actions/PropertyTypeAction";
 
-const PrivacyType = ({ onBack, onNext ,currentStep}) => {
+const PrivacyType = ({ onBack, onNext, currentStep }) => {
   const { privacyOptions } = useSelector((state) => state.privacyOptions);
   const dispatch = useDispatch();
 
@@ -11,22 +11,21 @@ const PrivacyType = ({ onBack, onNext ,currentStep}) => {
 
   useEffect(() => {
     const propertyTypeId = localStorage.getItem("pendingPropertyTypeId");
-    const storedPrivacyId  = localStorage.getItem("privacyId");
+    const storedPrivacyId = localStorage.getItem("privacyId");
 
     if (propertyTypeId) {
       dispatch(fetchPrivacyOptions(propertyTypeId));
     }
 
-    if(storedPrivacyId){
+    if (storedPrivacyId) {
       setSelectedPrivacyId(storedPrivacyId);
     }
   }, [dispatch]);
 
-
-  const handleSelect=(id)=>{
-      setSelectedPrivacyId(id);
-      localStorage.setItem("privacyId",id);
-  }
+  const handleSelect = (id) => {
+    setSelectedPrivacyId(id);
+    localStorage.setItem("privacyId", id);
+  };
 
   return (
     <section className="" style={{ height: "520px" }}>
@@ -39,7 +38,13 @@ const PrivacyType = ({ onBack, onNext ,currentStep}) => {
             <div className="row gy-3">
               {privacyOptions.map((option) => (
                 <div className="col-lg-12" key={option._id}>
-                  <div className={`card rounded-4 ${selectedPrivacyId === option._id ? 'border-tight':''}`} style={{ height: "120px",cursor:'pointer' }} onClick={()=>handleSelect(option._id)}>
+                  <div
+                    className={`card rounded-4 ${
+                      selectedPrivacyId === option._id ? "border-tight" : ""
+                    }`}
+                    style={{ height: "120px", cursor: "pointer" }}
+                    onClick={() => handleSelect(option._id)}
+                  >
                     <div className="card-body d-flex flex-row align-items-center justify-content-between gap-5">
                       <div className="flex-column">
                         <h4 className="text-dark fs-5">{option.name}</h4>
@@ -71,7 +76,11 @@ const PrivacyType = ({ onBack, onNext ,currentStep}) => {
         >
           Back
         </button>
-        <button className="btn btn-dark fs-xlg px-4 py-2" onClick={onNext} disabled={!selectedPrivacyId}>
+        <button
+          className="btn btn-dark fs-xlg px-4 py-2"
+          onClick={onNext}
+          disabled={!selectedPrivacyId}
+        >
           Next
         </button>
       </div>

@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HostingSteps from "../HostingSteps";
 import { BeatLoader } from "react-spinners";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAmenititesList } from "../../redux/actions/PropertyTypeAction";
 
 const Amenities = ({ currentStep, onBack, OnNext }) => {
   const [loading, setLoading] = useState(false);
   const [loadingBack, setLoadingBack] = useState(false);
+
+  const { amenities } = useSelector((state) => state.amenities);
+  const propertyTypeId = localStorage.getItem("pendingPropertyTypeId");
+  const token = localStorage.getItem("authToken");
+  const dispatch = useDispatch();
 
   const handleClickBack = () => {
     if (loading) return;
@@ -14,6 +21,18 @@ const Amenities = ({ currentStep, onBack, OnNext }) => {
       setLoadingBack(false);
     }, 1200);
   };
+
+  useEffect(() => {
+    dispatch(fetchAmenititesList(propertyTypeId, token));
+  }, [dispatch, propertyTypeId, token]);
+
+  const guestFavourites = amenities.filter(
+    (amenity) => amenity.amenityType === "guestFavorite"
+  );
+
+  const standoutAmenity = amenities.filter(
+    (amenity) => amenity.amenityType === "standout"
+  );
 
   return (
     <div className="" style={{ maxHeight: "500px", overflowY: "scroll" }}>
@@ -28,8 +47,51 @@ const Amenities = ({ currentStep, onBack, OnNext }) => {
                 You can add more amenities after you publish your listing.
               </h5>
 
-              <div className="row mt-5">
-                <div className="col-lg-3"></div>
+              <h6 className="text-dark mt-5" style={{fontWeight:'500',fontSize:'18px'}}>What about these guest favourites?</h6>
+
+              <div className="row mt-2 gy-4">
+                {guestFavourites.map((amenity) => (
+                  <div className="col-lg-4">
+                    <div className="card rouded-6 h-100" style={{cursor: "pointer"}}>
+                      <div className="card-body d-flex flex-column align-items-center justify-content-center">
+                        <img
+                          src={amenity.thumbnail?.url}
+                          className="img-fluid"
+                          width={40}
+                          alt=""
+                        />
+
+                        <div className="property-text">
+                          <h6 className="card-title mt-3">{amenity.name}</h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              
+               <h6 className="text-dark mt-5" style={{fontWeight:'500',fontSize:'18px'}}>Do you have any standout amenities?</h6>
+
+              <div className="row mt-2 gy-4">
+                {standoutAmenity.map((amenity) => (
+                  <div className="col-lg-4">
+                    <div className="card rouded-6 h-100" style={{cursor: "pointer"}}>
+                      <div className="card-body d-flex flex-column align-items-center justify-content-center">
+                        <img
+                          src={amenity.thumbnail?.url}
+                          className="img-fluid"
+                          width={40}
+                          alt=""
+                        />
+
+                        <div className="property-text">
+                          <h6 className="card-title mt-3">{amenity.name}</h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

@@ -7,6 +7,7 @@ import {
 } from "../../redux/actions/PropertyAction";
 import { BeatLoader } from "react-spinners";
 
+
 const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("authToken");
@@ -15,6 +16,7 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
   const categoryId = localStorage.getItem("categoryId");
 
   const { selectedPrivacyId } = useSelector((state) => state.privacyOptions);
+ 
 
   const [counts, setCounts] = useState({
     beds: 1,
@@ -32,6 +34,8 @@ const FloorPlan = ({ onNext, onBack, currentStep, propertyId }) => {
       dispatch(getPrivacyOptionByID(privacyId, token));
     }
   }, [dispatch, privacyId, token]);
+
+
 
   const extraBedRooms = selectedPrivacyId?.extraBedrooms;
 
